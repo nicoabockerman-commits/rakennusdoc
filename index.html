@@ -13,48 +13,30 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root {
-  --bg: #0d0f14;
-  --bg2: #13161e;
-  --bg3: #1a1e2a;
-  --card: #1e2330;
-  --card2: #252b3b;
-  --border: #2e3650;
-  --accent: #f0a500;
-  --accent2: #e8873a;
-  --text: #e8eaf0;
-  --text2: #8b92a8;
-  --text3: #555f7a;
-  --green: #2ecc71;
-  --red: #e74c3c;
-  --blue: #3498db;
-  --radius: 10px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e2a;--card:#1e2330;--card2:#252b3b;
+  --border:#2e3650;--accent:#f0a500;--accent2:#e8873a;--text:#e8eaf0;
+  --text2:#8b92a8;--text3:#555f7a;--green:#2ecc71;--red:#e74c3c;--blue:#3498db;
+  --orange:#e67e22;--purple:#9b59b6;--radius:10px;--shadow:0 4px 24px rgba(0,0,0,0.4);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 
-/* TOPBAR */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .topbar-logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--accent);letter-spacing:1px}
 .topbar-logo span{color:var(--text2);font-weight:400}
 .topbar-right{display:flex;gap:8px;align-items:center}
 
-/* BOTTOM NAV */
 .bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;color:var(--text3);font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.5px;transition:color 0.2s;gap:4px;border:none;background:none}
 .bnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .bnav-item.active{color:var(--accent)}
 
-/* PAGES */
 .page{display:none;padding:16px;padding-bottom:80px;min-height:calc(100vh - 56px)}
 .page.active{display:block}
 
-/* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.5px;transition:all 0.2s}
 .btn-primary{background:var(--accent);color:#000}
 .btn-primary:hover{background:var(--accent2)}
@@ -64,7 +46,6 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 .btn-icon{padding:8px;border-radius:8px;background:var(--card2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2)}
 .btn-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* FORMS */
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
 .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Noto Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
@@ -72,23 +53,40 @@ h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 .form-group textarea{resize:vertical;min-height:80px}
 select option{background:var(--bg3)}
 
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.active{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;padding:20px}
 .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
 .modal-title{font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent)}
 
-/* SECTION TITLE */
 .section-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* BADGE */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600}
 .badge-accent{background:rgba(240,165,0,0.15);color:var(--accent);border:1px solid rgba(240,165,0,0.3)}
 .badge-green{background:rgba(46,204,113,0.15);color:var(--green);border:1px solid rgba(46,204,113,0.3)}
+.badge-red{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.3)}
+.badge-blue{background:rgba(52,152,219,0.15);color:var(--blue);border:1px solid rgba(52,152,219,0.3)}
+.badge-purple{background:rgba(155,89,182,0.15);color:var(--purple);border:1px solid rgba(155,89,182,0.3)}
 
-/* TYÖMAA CARD */
+/* TAGS */
+.tag-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-family:'Rajdhani',sans-serif;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all 0.15s;margin:3px}
+.tag-btn.tag-ongelma{background:rgba(231,76,60,0.1);color:var(--red);border-color:rgba(231,76,60,0.3)}
+.tag-btn.tag-ongelma.active{background:var(--red);color:#fff;border-color:var(--red)}
+.tag-btn.tag-korjattu{background:rgba(46,204,113,0.1);color:var(--green);border-color:rgba(46,204,113,0.3)}
+.tag-btn.tag-korjattu.active{background:var(--green);color:#fff;border-color:var(--green)}
+.tag-btn.tag-tarkastus{background:rgba(52,152,219,0.1);color:var(--blue);border-color:rgba(52,152,219,0.3)}
+.tag-btn.tag-tarkastus.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tag-btn.tag-hyvaksytty{background:rgba(155,89,182,0.1);color:var(--purple);border-color:rgba(155,89,182,0.3)}
+.tag-btn.tag-hyvaksytty.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.tag-btn.tag-odottaa{background:rgba(240,165,0,0.1);color:var(--accent);border-color:rgba(240,165,0,0.3)}
+.tag-btn.tag-odottaa.active{background:var(--accent);color:#000;border-color:var(--accent)}
+
+/* MEDIA TAG OVERLAY */
+.media-tags{position:absolute;top:4px;left:4px;display:flex;flex-wrap:wrap;gap:2px;max-width:90%}
+.media-tag-dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.5)}
+
+/* SITE CARD */
 .site-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.2s,transform 0.1s}
 .site-card:hover{border-color:var(--accent);transform:translateY(-1px)}
 .site-card-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
@@ -98,8 +96,8 @@ select option{background:var(--bg3)}
 .zone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .zone-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.2s}
 .zone-card:hover{border-color:var(--accent)}
-.zone-thumb{width:100%;height:100px;object-fit:cover;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3)}
-.zone-thumb img{width:100%;height:100%;object-fit:cover}
+.zone-thumb{width:100%;height:100px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3);position:relative;overflow:hidden}
+.zone-thumb img,.zone-thumb video{width:100%;height:100%;object-fit:cover}
 .zone-info{padding:10px}
 .zone-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
 .zone-count{font-size:11px;color:var(--text2);margin-top:2px}
@@ -108,96 +106,127 @@ select option{background:var(--bg3)}
 .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .media-item{aspect-ratio:1;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative}
 .media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
-.media-item .media-date{position:absolute;bottom:4px;left:4px;right:4px;font-size:9px;color:#fff;background:rgba(0,0,0,0.6);border-radius:3px;padding:2px 4px;text-align:center}
+.media-item .media-date{position:absolute;bottom:0;left:0;right:0;font-size:9px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:8px 4px 3px;text-align:center}
 .media-item .media-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3)}
 .media-item .media-play svg{width:28px;height:28px;fill:#fff;opacity:0.9}
 
+/* SEARCH BAR */
+.search-bar{display:flex;gap:8px;margin-bottom:14px;align-items:center}
+.search-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:var(--accent)}
+.search-results{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+.search-result-item{padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover{background:var(--card2)}
+.search-result-type{font-size:10px;color:var(--text3);font-family:'Rajdhani',sans-serif;font-weight:600;text-transform:uppercase;margin-bottom:3px}
+.search-result-title{font-size:14px;color:var(--text);font-weight:500}
+.search-result-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
 /* LIGHTBOX */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:300;display:none;flex-direction:column}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:300;display:none;flex-direction:column}
 .lightbox.active{display:flex}
-.lightbox-header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.lightbox-body{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden}
+.lightbox-header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.lightbox-body{flex:1;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;min-height:0}
 .lightbox-body img,.lightbox-body video{max-width:100%;max-height:100%;border-radius:8px;object-fit:contain}
-.lightbox-footer{padding:12px 16px;border-top:1px solid var(--border)}
-.lightbox-caption{font-size:14px;color:var(--text);margin-bottom:8px}
-.lightbox-meta{font-size:12px;color:var(--text2)}
+.lightbox-footer{padding:12px 16px;border-top:1px solid var(--border);overflow-y:auto;max-height:40vh;flex-shrink:0}
 
 /* COMMENTS */
-.comment{display:flex;gap:10px;margin-bottom:12px}
-.comment-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:#000;font-size:14px;flex-shrink:0}
-.comment-body{flex:1;background:var(--bg3);border-radius:8px;padding:10px}
-.comment-author{font-size:12px;color:var(--accent);font-weight:600;font-family:'Rajdhani',sans-serif}
-.comment-text{font-size:13px;color:var(--text);margin-top:4px}
-.comment-time{font-size:11px;color:var(--text3);margin-top:4px}
+.comment{display:flex;gap:10px;margin-bottom:10px}
+.comment-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:#000;font-size:13px;flex-shrink:0}
+.comment-body{flex:1;background:var(--bg3);border-radius:8px;padding:8px 10px}
+.comment-author{font-size:11px;color:var(--accent);font-weight:600;font-family:'Rajdhani',sans-serif}
+.comment-text{font-size:13px;color:var(--text);margin-top:2px}
+.comment-time{font-size:10px;color:var(--text3);margin-top:3px}
 
-/* RAPORTTI */
+/* REPORT */
 .report-day{border-left:3px solid var(--accent);padding-left:14px;margin-bottom:20px}
 .report-day-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent);margin-bottom:8px}
 .report-entry{background:var(--card);border-radius:8px;padding:12px;margin-bottom:8px}
 
 /* MAP */
-#mapContainer{border-radius:var(--radius);overflow:hidden;height:400px;border:1px solid var(--border)}
-.map-site-list{margin-top:14px}
+#mapContainer{border-radius:var(--radius);overflow:hidden;height:380px;border:1px solid var(--border)}
 
-/* UPLOAD AREA */
+/* UPLOAD */
 .upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s}
 .upload-area:hover,.upload-area.drag{border-color:var(--accent);background:rgba(240,165,0,0.05)}
-.upload-area p{color:var(--text2);font-size:14px;margin-top:8px}
 .upload-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .upload-preview-item{aspect-ratio:1;border-radius:6px;overflow:hidden;position:relative;background:var(--bg3)}
 .upload-preview-item img,.upload-preview-item video{width:100%;height:100%;object-fit:cover}
-.upload-preview-item .remove-preview{position:absolute;top:4px;right:4px;background:rgba(231,76,60,0.9);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;border:none}
+.remove-preview{position:absolute;top:4px;right:4px;background:rgba(231,76,60,0.9);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;border:none}
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
 .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
 
 /* TOAST */
-.toast-container{position:fixed;top:70px;right:16px;z-index:400;display:flex;flex-direction:column;gap:8px}
-.toast{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);box-shadow:var(--shadow);animation:slideIn 0.3s ease;display:flex;align-items:center;gap:8px;max-width:280px}
+.toast-container{position:fixed;top:70px;right:16px;z-index:500;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);box-shadow:var(--shadow);animation:slideIn 0.3s ease;max-width:280px}
 .toast.success{border-color:var(--green);color:var(--green)}
 .toast.error{border-color:var(--red);color:var(--red)}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 /* LOADER */
 .loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text3)}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:12px}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* LOGIN */
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px}
 .login-logo{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--accent);text-align:center;margin-bottom:4px}
-.login-sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:28px}
+.login-sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:24px}
 .login-tabs{display:flex;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:20px}
 .login-tab{flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;color:var(--text2);transition:all 0.2s;border:none;background:none}
 .login-tab.active{background:var(--accent);color:#000}
+.remember-row{display:flex;align-items:center;gap:8px;margin:10px 0;font-size:13px;color:var(--text2)}
+.remember-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.forgot-link{text-align:right;font-size:12px;color:var(--accent);cursor:pointer;margin-top:6px;text-decoration:underline}
 
 /* CAMERA */
-.camera-view{position:fixed;inset:0;background:#000;z-index:300;display:none;flex-direction:column}
+.camera-view{position:fixed;inset:0;background:#000;z-index:400;display:none;flex-direction:column}
 .camera-view.active{display:flex}
 .camera-preview{flex:1;object-fit:cover;width:100%}
 .camera-controls{padding:20px;display:flex;align-items:center;justify-content:space-around;background:rgba(0,0,0,0.8)}
 .camera-shutter{width:64px;height:64px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,0.3);cursor:pointer;transition:transform 0.1s}
 .camera-shutter:active{transform:scale(0.9)}
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
-.empty svg{width:48px;height:48px;stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:12px;opacity:0.4}
+.empty svg{width:44px;height:44px;stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:12px;opacity:0.4}
 .empty h3{font-family:'Rajdhani',sans-serif;font-size:18px;color:var(--text2);margin-bottom:6px}
 .empty p{font-size:13px}
 
-/* DIVIDER */
-.divider{height:1px;background:var(--border);margin:16px 0}
+/* MEASUREMENTS */
+.measurement-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
+.measurement-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--accent)}
+.measurement-result{font-size:20px;font-weight:700;color:var(--text);margin:4px 0}
+.measurement-detail{font-size:12px;color:var(--text2)}
+.calc-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center;margin-bottom:8px}
+.calc-op{color:var(--text2);font-size:18px;font-weight:700;text-align:center}
+.calc-result{background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);border-radius:8px;padding:10px;text-align:center;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent);margin-top:8px}
 
-/* TAG */
-.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);margin:2px}
+/* CONTACTS */
+.contacts-drawer{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:150;transition:right 0.3s;padding:16px;overflow-y:auto}
+.contacts-drawer.open{right:0}
+.contacts-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:149;display:none}
+.contacts-overlay.open{display:block}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.contact-avatar{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:#000;font-size:16px;flex-shrink:0}
+.contact-info{flex:1}
+.contact-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.contact-role{font-size:12px;color:var(--text2)}
+.contact-phone{font-size:13px;color:var(--accent);margin-top:2px}
 
-/* FLOATING ACTION BUTTON */
-.fab{position:fixed;bottom:76px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(240,165,0,0.4);z-index:90;transition:transform 0.2s}
-.fab:hover{transform:scale(1.05)}
-.fab svg{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;display:none;align-items:center;justify-content:center;padding:24px}
+.confirm-overlay.active{display:flex}
+.confirm-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:320px;text-align:center}
+.confirm-icon{font-size:36px;margin-bottom:12px}
+.confirm-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
+.confirm-text{font-size:13px;color:var(--text2);margin-bottom:20px}
+.confirm-btns{display:flex;gap:10px}
 
+/* UTILS */
 .hidden{display:none!important}
 .flex{display:flex}
 .flex-between{display:flex;align-items:center;justify-content:space-between}
@@ -205,14 +234,15 @@ select option{background:var(--bg3)}
 .mt-8{margin-top:8px}
 .mt-16{margin-top:16px}
 .text-sm{font-size:13px}
-.text-xs{font-size:11px}
 .text-muted{color:var(--text2)}
 .text-accent{color:var(--accent)}
-.font-bold{font-weight:700}
 .w-full{width:100%}
-
-/* NAME INPUT for login */
+.divider{height:1px;background:var(--border);margin:12px 0}
 .name-display{font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--text2);padding:4px 8px;background:var(--card2);border-radius:6px;border:1px solid var(--border)}
+
+.fab{position:fixed;bottom:76px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(240,165,0,0.4);z-index:90;transition:transform 0.2s}
+.fab:hover{transform:scale(1.05)}
+.fab svg{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -223,34 +253,53 @@ select option{background:var(--bg3)}
     <div class="login-logo">🏗 RakennusDoc</div>
     <div class="login-sub">Rakennustyömaan dokumentointijärjestelmä</div>
     <div class="login-tabs">
-      <button class="login-tab active" onclick="switchLoginTab('login')">Kirjaudu</button>
-      <button class="login-tab" onclick="switchLoginTab('register')">Luo tili</button>
+      <button class="login-tab active" onclick="switchLoginTab('login',this)">Kirjaudu</button>
+      <button class="login-tab" onclick="switchLoginTab('register',this)">Luo tili</button>
+      <button class="login-tab" onclick="switchLoginTab('reset',this)">Unohtuiko?</button>
     </div>
+
+    <!-- LOGIN -->
     <div id="loginForm">
       <div class="form-group">
         <label>Sähköposti</label>
-        <input type="email" id="loginEmail" placeholder="nimi@yritys.fi">
+        <input type="email" id="loginEmail" placeholder="nimi@yritys.fi" autocomplete="email">
       </div>
       <div class="form-group">
         <label>Salasana</label>
-        <input type="password" id="loginPassword" placeholder="••••••••">
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
       </div>
-      <button class="btn btn-primary w-full" onclick="doLogin()" style="justify-content:center">Kirjaudu sisään</button>
+      <div class="remember-row">
+        <input type="checkbox" id="rememberMe" checked>
+        <label for="rememberMe">Muista minut kaikilla laitteilla</label>
+      </div>
+      <button class="btn btn-primary w-full" onclick="doLogin()" style="justify-content:center;margin-top:4px">Kirjaudu sisään</button>
     </div>
+
+    <!-- REGISTER -->
     <div id="registerForm" class="hidden">
       <div class="form-group">
         <label>Nimi</label>
-        <input type="text" id="regName" placeholder="Etunimi Sukunimi">
+        <input type="text" id="regName" placeholder="Etunimi Sukunimi" autocomplete="name">
       </div>
       <div class="form-group">
         <label>Sähköposti</label>
-        <input type="email" id="regEmail" placeholder="nimi@yritys.fi">
+        <input type="email" id="regEmail" placeholder="nimi@yritys.fi" autocomplete="email">
       </div>
       <div class="form-group">
         <label>Salasana</label>
-        <input type="password" id="regPassword" placeholder="vähintään 6 merkkiä">
+        <input type="password" id="regPassword" placeholder="vähintään 6 merkkiä" autocomplete="new-password">
       </div>
       <button class="btn btn-primary w-full" onclick="doRegister()" style="justify-content:center">Luo tili</button>
+    </div>
+
+    <!-- RESET PASSWORD -->
+    <div id="resetForm" class="hidden">
+      <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Syötä sähköpostiosoitteesi niin lähetämme sinulle salasanan palautusohjeet.</p>
+      <div class="form-group">
+        <label>Sähköposti</label>
+        <input type="email" id="resetEmail" placeholder="nimi@yritys.fi">
+      </div>
+      <button class="btn btn-primary w-full" onclick="doReset()" style="justify-content:center">Lähetä palautuslinkki</button>
     </div>
   </div>
 </div>
@@ -258,11 +307,13 @@ select option{background:var(--bg3)}
 <!-- MAIN APP -->
 <div id="mainApp" class="hidden">
 
-<!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-logo">🏗 Rakennus<span>Doc</span></div>
   <div class="topbar-right">
     <span class="name-display" id="userNameDisplay">-</span>
+    <button class="btn-icon" onclick="toggleContacts()" title="Yhteystiedot" id="contactsBtn" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </button>
     <button class="btn-icon" onclick="doLogout()" title="Kirjaudu ulos">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
     </button>
@@ -270,26 +321,25 @@ select option{background:var(--bg3)}
 </div>
 
 <!-- PAGES -->
-
-<!-- TYÖMAAT -->
 <div id="pageTyomaat" class="page active">
+  <div class="search-bar">
+    <input class="search-input" id="globalSearch" placeholder="🔍 Hae kuvista, raporteista, vyöhykkeistä..." oninput="doGlobalSearch(this.value)">
+  </div>
+  <div id="globalSearchResults" class="hidden"></div>
   <div class="section-title">Työmaat</div>
   <div id="tyomaaList"><div class="loader"><div class="spinner"></div>Ladataan...</div></div>
 </div>
 
-<!-- TYÖMAA DETAIL -->
 <div id="pageDetail" class="page">
   <div id="detailContent"></div>
 </div>
 
-<!-- KARTTA -->
 <div id="pageKartta" class="page">
   <div class="section-title">Karttanäkymä</div>
   <div id="mapContainer"></div>
-  <div class="map-site-list" id="mapSiteList"></div>
+  <div id="mapSiteList" style="margin-top:14px"></div>
 </div>
 
-<!-- RAPORTIT -->
 <div id="pageRaportit" class="page">
   <div class="section-title">Päivittäiset raportit</div>
   <div class="form-group">
@@ -301,60 +351,82 @@ select option{background:var(--bg3)}
   <div id="reportContent"></div>
 </div>
 
-<!-- BOTTOM NAV -->
+<div id="pageMittaukset" class="page">
+  <div class="section-title">Mittaukset & laskelmat</div>
+  <div class="form-group">
+    <label>Valitse työmaa</label>
+    <select id="measSiteSelect" onchange="loadMeasurements()">
+      <option value="">-- Valitse työmaa --</option>
+    </select>
+  </div>
+  <div id="measContent"></div>
+</div>
+
 <nav class="bottomnav">
   <button class="bnav-item active" onclick="showPage('Tyomaat',this)">
     <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
     Työmaat
+  </button>
+  <button class="bnav-item" onclick="showPage('Mittaukset',this)">
+    <svg viewBox="0 0 24 24"><path d="M2 12h20M2 12l4-4M2 12l4 4"/><rect x="8" y="8" width="13" height="8" rx="1"/></svg>
+    Mittaukset
   </button>
   <button class="bnav-item" onclick="showPage('Kartta',this)">
     <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
     Kartta
   </button>
   <button class="bnav-item" onclick="showPage('Raportit',this)">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     Raportit
   </button>
 </nav>
 
-<!-- FAB -->
 <button class="fab" id="fabBtn" onclick="openFab()">
   <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
 </div><!-- end mainApp -->
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title" id="confirmTitle">Oletko varma?</div>
+    <div class="confirm-text" id="confirmText">Tätä toimintoa ei voi peruuttaa.</div>
+    <div class="confirm-btns">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeConfirm(false)">Peruuta</button>
+      <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="closeConfirm(true)">Poista</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTS DRAWER -->
+<div class="contacts-overlay" id="contactsOverlay" onclick="toggleContacts()"></div>
+<div class="contacts-drawer" id="contactsDrawer">
+  <div class="flex-between" style="margin-bottom:16px">
+    <h3 style="font-family:'Rajdhani',sans-serif;font-size:18px;color:var(--accent)">👷 Yhteystiedot</h3>
+    <button class="btn-icon" onclick="toggleContacts()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <button class="btn btn-primary w-full" style="justify-content:center;margin-bottom:14px" onclick="openModal('modalContact')">+ Lisää yhteystieto</button>
+  <div id="contactsList"><div class="empty"><p>Ei yhteystietoja</p></div></div>
+</div>
 
 <!-- MODAL: Uusi työmaa -->
 <div class="modal-overlay" id="modalTyomaa">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Uusi työmaa</div>
-    <div class="form-group">
-      <label>Työmaan nimi *</label>
-      <input type="text" id="siteName" placeholder="esim. Koivulan omakotitalo">
-    </div>
-    <div class="form-group">
-      <label>Osoite</label>
-      <input type="text" id="siteAddress" placeholder="Katuosoite, kaupunki">
-    </div>
+    <div class="form-group"><label>Työmaan nimi *</label><input type="text" id="siteName" placeholder="esim. Koivulan omakotitalo"></div>
+    <div class="form-group"><label>Osoite</label><input type="text" id="siteAddress" placeholder="Katuosoite, kaupunki"></div>
     <div class="form-group">
       <label>Kohdetyyppi</label>
-      <select id="siteType">
-        <option>Omakotitalo</option>
-        <option>Rivitalo</option>
-        <option>Kerrostalo</option>
-        <option>Teollisuus</option>
-        <option>Infrarakentaminen</option>
-        <option>Muu</option>
-      </select>
+      <select id="siteType"><option>Omakotitalo</option><option>Rivitalo</option><option>Kerrostalo</option><option>Teollisuus</option><option>Infrarakentaminen</option><option>Muu</option></select>
     </div>
-    <div class="form-group">
-      <label>Lisätiedot</label>
-      <textarea id="siteNotes" placeholder="Muistiinpanoja..."></textarea>
-    </div>
+    <div class="form-group"><label>Lisätiedot</label><textarea id="siteNotes" placeholder="Muistiinpanoja..."></textarea></div>
     <div style="display:flex;gap:10px">
       <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalTyomaa')">Peruuta</button>
       <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveTyomaa()">Tallenna</button>
@@ -371,51 +443,23 @@ select option{background:var(--bg3)}
       <label>Vyöhyketyyppi *</label>
       <select id="zoneType">
         <optgroup label="Maanrakennus & putkistot">
-          <option>Salaoja</option><option>Vesiputki</option><option>Jätevesi</option>
-          <option>Poistovesi</option><option>Sadevesiviemäri</option><option>Hulevesiallas</option>
-          <option>Kunnallistekniikka</option><option>Kaivanto</option><option>Täyttömaa / Routasuoja</option>
-          <option>Maanvarainen laatta</option><option>Paalutus</option><option>Tukimuuri</option>
-          <option>Pintavesirakenne</option><option>Eroosiosuojaus</option><option>Massanvaihto</option>
-          <option>Stabilointi</option><option>Kallioleikkaus</option><option>Louhinta</option>
-          <option>Murskaus</option><option>Geotekniikka</option>
+          <option>Salaoja</option><option>Vesiputki</option><option>Jätevesi</option><option>Poistovesi</option>
+          <option>Sadevesiviemäri</option><option>Hulevesiallas</option><option>Kunnallistekniikka</option>
+          <option>Kaivanto</option><option>Täyttömaa / Routasuoja</option><option>Maanvarainen laatta</option>
+          <option>Paalutus</option><option>Tukimuuri</option><option>Pintavesirakenne</option>
+          <option>Eroosiosuojaus</option><option>Massanvaihto</option><option>Stabilointi</option>
+          <option>Kallioleikkaus</option><option>Louhinta</option><option>Murskaus</option><option>Geotekniikka</option>
         </optgroup>
-        <optgroup label="Perustukset">
-          <option>Anturaperustus</option><option>Laattaperustus</option><option>Paaluhattu</option>
-          <option>Sokkelit</option><option>Alapohja</option>
-        </optgroup>
-        <optgroup label="Rakenne & runko">
-          <option>Runko</option><option>Väliseinät</option><option>Yläpohja</option>
-          <option>Vesikatto</option><option>Ulkoverhous</option><option>Ikkuna-asennukset</option>
-          <option>Oviasennukset</option><option>Teräsrakenteet</option>
-        </optgroup>
-        <optgroup label="Sisätyöt">
-          <option>Tasoitetyöt</option><option>Maalaus</option><option>Lattiat</option>
-          <option>Katto</option><option>Keittiö</option><option>Kylpyhuone</option>
-          <option>Sauna</option><option>Portaat</option>
-        </optgroup>
-        <optgroup label="Talotekniikka">
-          <option>Sähkötyöt</option><option>LVI</option><option>Maalämpö</option>
-          <option>Ilmanvaihto</option><option>Aurinkopaneelit</option><option>Lattialämmitys</option>
-          <option>Sprinkleri</option><option>Automaatio</option>
-        </optgroup>
-        <optgroup label="Piha & ympäristö">
-          <option>Piha-alue</option><option>Asfaltointi</option><option>Kiveys</option>
-          <option>Aidat</option><option>Istutukset</option><option>Valaistus ulko</option>
-          <option>Leikkipaikka</option><option>Varasto / Autotalli</option>
-        </optgroup>
-        <optgroup label="Muu">
-          <option>Yleiskuva</option><option>Muu</option>
-        </optgroup>
+        <optgroup label="Perustukset"><option>Anturaperustus</option><option>Laattaperustus</option><option>Paaluhattu</option><option>Sokkelit</option><option>Alapohja</option></optgroup>
+        <optgroup label="Rakenne & runko"><option>Runko</option><option>Väliseinät</option><option>Yläpohja</option><option>Vesikatto</option><option>Ulkoverhous</option><option>Ikkuna-asennukset</option><option>Oviasennukset</option><option>Teräsrakenteet</option></optgroup>
+        <optgroup label="Sisätyöt"><option>Tasoitetyöt</option><option>Maalaus</option><option>Lattiat</option><option>Katto</option><option>Keittiö</option><option>Kylpyhuone</option><option>Sauna</option><option>Portaat</option></optgroup>
+        <optgroup label="Talotekniikka"><option>Sähkötyöt</option><option>LVI</option><option>Maalämpö</option><option>Ilmanvaihto</option><option>Aurinkopaneelit</option><option>Lattialämmitys</option><option>Sprinkleri</option><option>Automaatio</option></optgroup>
+        <optgroup label="Piha & ympäristö"><option>Piha-alue</option><option>Asfaltointi</option><option>Kiveys</option><option>Aidat</option><option>Istutukset</option><option>Valaistus ulko</option><option>Leikkipaikka</option><option>Varasto / Autotalli</option></optgroup>
+        <optgroup label="Muu"><option>Yleiskuva</option><option>Muu</option></optgroup>
       </select>
     </div>
-    <div class="form-group">
-      <label>Oma nimi (valinnainen)</label>
-      <input type="text" id="zoneName" placeholder="esim. Pohjoinen nurkkaus">
-    </div>
-    <div class="form-group">
-      <label>Muistiinpanot</label>
-      <textarea id="zoneNotes" placeholder="Lisätiedot..."></textarea>
-    </div>
+    <div class="form-group"><label>Oma nimi (valinnainen)</label><input type="text" id="zoneName" placeholder="esim. Pohjoinen nurkkaus"></div>
+    <div class="form-group"><label>Muistiinpanot</label><textarea id="zoneNotes" placeholder="Lisätiedot..."></textarea></div>
     <div style="display:flex;gap:10px">
       <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalZone')">Peruuta</button>
       <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveZone()">Tallenna</button>
@@ -428,21 +472,22 @@ select option{background:var(--bg3)}
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Lisää media</div>
+    <div class="form-group"><label>Vyöhyke *</label><select id="mediaZone"></select></div>
+    <div class="form-group"><label>Kuvauspäivä</label><input type="date" id="mediaDate"></div>
+    <div class="form-group"><label>Kuvaus</label><input type="text" id="mediaCaption" placeholder="Mitä kuvassa näkyy?"></div>
     <div class="form-group">
-      <label>Vyöhyke *</label>
-      <select id="mediaZone"></select>
-    </div>
-    <div class="form-group">
-      <label>Kuvauspäivä</label>
-      <input type="date" id="mediaDate">
-    </div>
-    <div class="form-group">
-      <label>Kuvaus</label>
-      <input type="text" id="mediaCaption" placeholder="Mitä kuvassa näkyy?">
+      <label>Tagit</label>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <button type="button" class="tag-btn tag-ongelma" onclick="toggleTag(this,'ongelma')">🔴 Ongelma</button>
+        <button type="button" class="tag-btn tag-korjattu" onclick="toggleTag(this,'korjattu')">🟢 Korjattu</button>
+        <button type="button" class="tag-btn tag-tarkastus" onclick="toggleTag(this,'tarkastus')">🔵 Tarkastus</button>
+        <button type="button" class="tag-btn tag-hyvaksytty" onclick="toggleTag(this,'hyvaksytty')">🟣 Hyväksytty</button>
+        <button type="button" class="tag-btn tag-odottaa" onclick="toggleTag(this,'odottaa')">🟡 Odottaa</button>
+      </div>
     </div>
     <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <p>Napauta ladataksesi tai raahaa tiedostoja</p>
+      <p style="color:var(--text2);font-size:14px;margin-top:8px">Napauta ladataksesi tai raahaa tiedostoja</p>
       <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG, MP4, MOV</p>
     </div>
     <input type="file" id="fileInput" multiple accept="image/*,video/*" class="hidden">
@@ -466,36 +511,75 @@ select option{background:var(--bg3)}
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Lisää työraportti</div>
-    <div class="form-group">
-      <label>Työmaa</label>
-      <select id="reportSite"></select>
-    </div>
-    <div class="form-group">
-      <label>Päivämäärä</label>
-      <input type="date" id="reportDate">
-    </div>
-    <div class="form-group">
-      <label>Mitä tehtiin tänään</label>
-      <textarea id="reportWork" placeholder="Kuvaile päivän työt..." style="min-height:100px"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Työtekijöiden määrä</label>
-      <input type="number" id="reportWorkers" placeholder="0" min="0">
-    </div>
+    <div class="form-group"><label>Työmaa</label><select id="reportSite"></select></div>
+    <div class="form-group"><label>Päivämäärä</label><input type="date" id="reportDate"></div>
+    <div class="form-group"><label>Mitä tehtiin tänään *</label><textarea id="reportWork" placeholder="Kuvaile päivän työt..." style="min-height:100px"></textarea></div>
+    <div class="form-group"><label>Työntekijöiden määrä</label><input type="number" id="reportWorkers" placeholder="0" min="0"></div>
     <div class="form-group">
       <label>Sää</label>
-      <select id="reportWeather">
-        <option>☀️ Aurinkoinen</option><option>⛅ Puolipilvinen</option>
-        <option>🌧 Sateinen</option><option>❄️ Lumisade</option><option>💨 Tuulinen</option><option>🌫 Sumuinen</option>
-      </select>
+      <select id="reportWeather"><option>☀️ Aurinkoinen</option><option>⛅ Puolipilvinen</option><option>🌧 Sateinen</option><option>❄️ Lumisade</option><option>💨 Tuulinen</option><option>🌫 Sumuinen</option></select>
     </div>
-    <div class="form-group">
-      <label>Lisähuomiot</label>
-      <textarea id="reportNotes" placeholder="Ongelmat, huomiot, seuraavan päivän suunnitelmat..."></textarea>
-    </div>
+    <div class="form-group"><label>Lisähuomiot</label><textarea id="reportNotes" placeholder="Ongelmat, huomiot, seuraavan päivän suunnitelmat..."></textarea></div>
     <div style="display:flex;gap:10px">
       <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalReport')">Peruuta</button>
       <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveReport()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Mittaus -->
+<div class="modal-overlay" id="modalMittaus">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Lisää mittaus</div>
+    <div class="form-group"><label>Työmaa *</label><select id="measSite"></select></div>
+    <div class="form-group"><label>Mittauksen nimi *</label><input type="text" id="measName" placeholder="esim. Terassi, Salaoja itäsivu"></div>
+    <div class="form-group">
+      <label>Tyyppi</label>
+      <select id="measType" onchange="updateMeasFields()">
+        <option value="area">Pinta-ala (pituus × leveys = m²)</option>
+        <option value="volume">Tilavuus (pituus × leveys × syvyys = m³)</option>
+        <option value="length">Pituus / linja (esim. putkilinja)</option>
+      </select>
+    </div>
+    <div id="measFields">
+      <div class="calc-row">
+        <div class="form-group" style="margin:0"><label>Pituus (m)</label><input type="number" id="measL" placeholder="0.00" step="0.01" oninput="calcMeas()"></div>
+        <div class="calc-op">×</div>
+        <div class="form-group" style="margin:0"><label>Leveys (m)</label><input type="number" id="measW" placeholder="0.00" step="0.01" oninput="calcMeas()"></div>
+        <div class="calc-op" id="measOp2" style="display:none">×</div>
+        <div class="form-group" id="measDepthGroup" style="margin:0;display:none"><label>Syvyys (m)</label><input type="number" id="measD" placeholder="0.00" step="0.01" oninput="calcMeas()"></div>
+      </div>
+      <div class="calc-result" id="measResult">Tulos: — m²</div>
+    </div>
+    <div class="form-group" style="margin-top:12px"><label>Putkilaji / huomio (valinnainen)</label><input type="text" id="measNote" placeholder="esim. DN110 PVC, betonimäärä..."></div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalMittaus')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveMittaus()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Yhteystieto -->
+<div class="modal-overlay" id="modalContact">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Lisää yhteystieto</div>
+    <div class="form-group"><label>Työmaa (valinnainen)</label><select id="contactSite"><option value="">Kaikki työmaat</option></select></div>
+    <div class="form-group"><label>Nimi *</label><input type="text" id="contactName" placeholder="Etunimi Sukunimi"></div>
+    <div class="form-group">
+      <label>Rooli</label>
+      <select id="contactRole">
+        <option>Työnjohtaja / Mestari</option><option>Rakennusmies</option><option>Sähköasentaja</option>
+        <option>LVI-asentaja</option><option>Maarakennuskuski</option><option>Aliurakoitsija</option>
+        <option>Arkkitehti</option><option>Rakennesuunnittelija</option><option>Tarkastaja</option><option>Muu</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Puhelinnumero *</label><input type="tel" id="contactPhone" placeholder="+358 40 123 4567"></div>
+    <div class="form-group"><label>Sähköposti</label><input type="email" id="contactEmail" placeholder="nimi@yritys.fi"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalContact')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveContact()">Tallenna</button>
     </div>
   </div>
 </div>
@@ -506,25 +590,26 @@ select option{background:var(--bg3)}
     <button class="btn-icon" onclick="closeLightbox()">
       <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <span id="lbZone" class="badge badge-accent"></span>
-    <button class="btn-icon" onclick="deleteMedia()" title="Poista">
-      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap" id="lbTags"></div>
+    <button class="btn-icon btn-danger" onclick="confirmDelete('media')" title="Poista">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
     </button>
   </div>
   <div class="lightbox-body" id="lbBody"></div>
   <div class="lightbox-footer">
-    <div class="lightbox-caption" id="lbCaption"></div>
-    <div class="lightbox-meta" id="lbMeta"></div>
+    <div style="font-size:14px;color:var(--text);margin-bottom:4px" id="lbCaption"></div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px" id="lbMeta"></div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:8px" id="lbZone"></div>
     <div class="divider"></div>
-    <div id="lbComments"></div>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <div id="lbComments" style="max-height:120px;overflow-y:auto;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
       <input type="text" id="lbCommentInput" placeholder="Kirjoita kommentti..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none">
       <button class="btn btn-primary btn-sm" onclick="addComment()">Lähetä</button>
     </div>
   </div>
 </div>
 
-<!-- CAMERA VIEW -->
+<!-- CAMERA -->
 <div class="camera-view" id="cameraView">
   <video id="cameraPreview" class="camera-preview" autoplay playsinline muted></video>
   <div class="camera-controls">
@@ -539,11 +624,10 @@ select option{background:var(--bg3)}
   <canvas id="cameraCanvas" class="hidden"></canvas>
 </div>
 
-<!-- FIREBASE + APP SCRIPTS -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, onSnapshot, query, orderBy, where, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyChXZJKbreDwkPhXUFwgiYwh5EcQb5kDTU",
@@ -553,43 +637,61 @@ const firebaseConfig = {
   messagingSenderId: "537521199862",
   appId: "1:537521199862:web:5541c58326f32da2282ad7"
 };
-
 const CLOUD_NAME = "dicmfqyhr";
 const UPLOAD_PRESET = "rakennusdoc";
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
-const auth = getAuth(firebaseApp);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 // STATE
-let currentUser = null;
-let currentSite = null;
-let currentSites = [];
-let currentZones = [];
-let currentMediaItems = [];
-let lightboxMedia = null;
-let cameraStream = null;
-let facingMode = "environment";
-let pendingFiles = [];
-let leafletMap = null;
-let markers = [];
+let currentUser = null, currentSite = null;
+let currentSites = [], currentZones = [], currentMediaItems = [];
+let lightboxMedia = null, cameraStream = null, facingMode = "environment";
+let pendingFiles = [], pendingTags = [];
+let leafletMap = null, markers = [];
+let confirmCallback = null;
+let allMediaCache = [], allReportsCache = [], allZonesCache = [];
+
+// ==================== CONFIRM DIALOG ====================
+window.confirmDelete = (type, id) => {
+  const titles = { media:'Poista tiedosto', zone:'Poista vyöhyke', site:'Poista työmaa', report:'Poista raportti', measurement:'Poista mittaus', contact:'Poista yhteystieto' };
+  document.getElementById('confirmTitle').textContent = titles[type] || 'Oletko varma?';
+  document.getElementById('confirmText').textContent = 'Tätä toimintoa ei voi peruuttaa. Haluatko varmasti poistaa tämän?';
+  document.getElementById('confirmOverlay').classList.add('active');
+  confirmCallback = () => {
+    if (type === 'media') deleteMedia();
+    else if (type === 'zone') deleteZone(id);
+    else if (type === 'report') deleteReport(id);
+    else if (type === 'measurement') deleteMeasurement(id);
+    else if (type === 'contact') deleteContact(id);
+  };
+};
+window.closeConfirm = (confirmed) => {
+  document.getElementById('confirmOverlay').classList.remove('active');
+  if (confirmed && confirmCallback) confirmCallback();
+  confirmCallback = null;
+};
 
 // ==================== AUTH ====================
-window.switchLoginTab = (tab) => {
+window.switchLoginTab = (tab, el) => {
   document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
   document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
   document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('resetForm').classList.toggle('hidden', tab !== 'reset');
 };
 
 window.doLogin = async () => {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPassword').value;
+  const remember = document.getElementById('rememberMe').checked;
   if (!email || !pass) return toast('Täytä kaikki kentät', 'error');
   try {
+    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email, pass);
   } catch(e) {
-    toast('Kirjautuminen epäonnistui: ' + e.message, 'error');
+    toast('Kirjautuminen epäonnistui. Tarkista sähköposti ja salasana.', 'error');
   }
 };
 
@@ -598,7 +700,9 @@ window.doRegister = async () => {
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPassword').value;
   if (!name || !email || !pass) return toast('Täytä kaikki kentät', 'error');
+  if (pass.length < 6) return toast('Salasanan pitää olla vähintään 6 merkkiä', 'error');
   try {
+    await setPersistence(auth, browserLocalPersistence);
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
     toast('Tili luotu! Tervetuloa, ' + name, 'success');
@@ -607,9 +711,18 @@ window.doRegister = async () => {
   }
 };
 
-window.doLogout = async () => {
-  await signOut(auth);
+window.doReset = async () => {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) return toast('Anna sähköpostiosoite', 'error');
+  try {
+    await sendPasswordResetEmail(auth, email);
+    toast('Palautuslinkki lähetetty sähköpostiisi!', 'success');
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
 };
+
+window.doLogout = async () => { await signOut(auth); };
 
 onAuthStateChanged(auth, user => {
   currentUser = user;
@@ -627,10 +740,6 @@ onAuthStateChanged(auth, user => {
 // ==================== INIT ====================
 function initApp() {
   loadTyomaat();
-  setDefaultDates();
-}
-
-function setDefaultDates() {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('mediaDate').value = today;
   document.getElementById('reportDate').value = today;
@@ -642,63 +751,58 @@ window.showPage = (name, el) => {
   document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('page' + name).classList.add('active');
   if (el) el.classList.add('active');
-
-  if (name === 'Kartta') initMap();
-  if (name === 'Raportit') loadReportSites();
-  if (name === 'Tyomaat') { currentSite = null; loadTyomaat(); updateFab(); }
-  updateFab();
+  const fab = document.getElementById('fabBtn');
+  const contactsBtn = document.getElementById('contactsBtn');
+  if (name === 'Kartta') { fab.classList.add('hidden'); initMap(); }
+  else fab.classList.remove('hidden');
+  if (name === 'Raportit') { loadReportSites(); }
+  if (name === 'Mittaukset') { loadMeasSites(); }
+  if (name === 'Tyomaat') { currentSite = null; contactsBtn.style.display = 'none'; }
+  document.getElementById('globalSearch').value = '';
+  document.getElementById('globalSearchResults').classList.add('hidden');
 };
 
 window.openFab = () => {
-  const activePage = document.querySelector('.page.active').id;
-  if (activePage === 'pageTyomaat') openModal('modalTyomaa');
-  else if (activePage === 'pageDetail') openMediaModal();
-  else if (activePage === 'pageRaportit') openReportModal();
+  const p = document.querySelector('.page.active').id;
+  if (p === 'pageTyomaat') openModal('modalTyomaa');
+  else if (p === 'pageDetail') openMediaModal();
+  else if (p === 'pageRaportit') { updateReportSelects(); openModal('modalReport'); }
+  else if (p === 'pageMittaukset') { updateMeasSelects(); openModal('modalMittaus'); }
 };
-
-function updateFab() {
-  const activePage = document.querySelector('.page.active').id;
-  const fabBtn = document.getElementById('fabBtn');
-  if (activePage === 'pageKartta') {
-    fabBtn.classList.add('hidden');
-  } else {
-    fabBtn.classList.remove('hidden');
-  }
-}
 
 // ==================== TYÖMAAT ====================
 function loadTyomaat() {
   const list = document.getElementById('tyomaaList');
   list.innerHTML = '<div class="loader"><div class="spinner"></div>Ladataan...</div>';
-
   const q = query(collection(db, 'sites'), orderBy('createdAt', 'desc'));
   onSnapshot(q, snap => {
     currentSites = [];
     snap.forEach(d => currentSites.push({ id: d.id, ...d.data() }));
     renderTyomaaList();
     updateReportSelects();
+    updateMeasSelects();
+    updateContactSelects();
   });
 }
 
 function renderTyomaaList() {
   const list = document.getElementById('tyomaaList');
   if (!currentSites.length) {
-    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/><path d="M8 7V5a2 2 0 0 1 4 0v2"/></svg><h3>Ei työmaita vielä</h3><p>Luo ensimmäinen työmaa + painikkeella</p></div>`;
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/></svg><h3>Ei työmaita vielä</h3><p>Luo ensimmäinen työmaa + painikkeella</p></div>`;
     return;
   }
   list.innerHTML = currentSites.map(s => `
     <div class="site-card" onclick="openSite('${s.id}')">
       <div class="flex-between">
         <div class="site-card-name">${s.name}</div>
-        <span class="badge badge-accent">${s.type || 'Kohde'}</span>
+        <span class="badge badge-accent">${s.type||'Kohde'}</span>
       </div>
       <div class="site-card-meta">
         ${s.address ? `<span>📍 ${s.address}</span>` : ''}
         <span>📅 ${s.createdAt ? new Date(s.createdAt.seconds*1000).toLocaleDateString('fi-FI') : '-'}</span>
       </div>
-      ${s.notes ? `<p style="font-size:12px;color:var(--text2);margin-top:8px">${s.notes}</p>` : ''}
-    </div>
-  `).join('');
+      ${s.notes ? `<p style="font-size:12px;color:var(--text2);margin-top:6px">${s.notes}</p>` : ''}
+    </div>`).join('');
 }
 
 window.saveTyomaa = async () => {
@@ -706,57 +810,54 @@ window.saveTyomaa = async () => {
   if (!name) return toast('Anna työmaan nimi', 'error');
   try {
     await addDoc(collection(db, 'sites'), {
-      name,
-      address: document.getElementById('siteAddress').value.trim(),
+      name, address: document.getElementById('siteAddress').value.trim(),
       type: document.getElementById('siteType').value,
       notes: document.getElementById('siteNotes').value.trim(),
-      createdBy: currentUser.uid,
-      createdByName: currentUser.displayName || currentUser.email,
+      createdBy: currentUser.uid, createdByName: currentUser.displayName || currentUser.email,
       createdAt: serverTimestamp()
     });
     closeModal('modalTyomaa');
-    document.getElementById('siteName').value = '';
-    document.getElementById('siteAddress').value = '';
-    document.getElementById('siteNotes').value = '';
+    ['siteName','siteAddress','siteNotes'].forEach(id => document.getElementById(id).value = '');
     toast('Työmaa lisätty!', 'success');
-  } catch(e) {
-    toast('Virhe: ' + e.message, 'error');
-  }
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
 };
 
 // ==================== SITE DETAIL ====================
-window.openSite = async (siteId) => {
+window.openSite = (siteId) => {
   currentSite = currentSites.find(s => s.id === siteId);
   if (!currentSite) return;
-
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('pageDetail').classList.add('active');
   document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
-  updateFab();
-
+  document.getElementById('pageDetail').classList.add('active');
+  document.getElementById('fabBtn').classList.remove('hidden');
+  document.getElementById('contactsBtn').style.display = 'flex';
+  loadContacts(siteId);
   renderDetailPage();
   loadZones(siteId);
 };
 
 function renderDetailPage() {
   document.getElementById('detailContent').innerHTML = `
-    <div class="flex-between" style="margin-bottom:16px">
+    <div class="flex-between" style="margin-bottom:14px">
       <button class="btn btn-secondary btn-sm" onclick="goBack()">← Takaisin</button>
       <div style="display:flex;gap:8px">
         <button class="btn btn-secondary btn-sm" onclick="openModal('modalZone')">+ Vyöhyke</button>
         <button class="btn btn-secondary btn-sm" onclick="exportPDF()">📄 PDF</button>
       </div>
     </div>
-    <div style="margin-bottom:16px">
-      <h2 style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700">${currentSite.name}</h2>
+    <div style="margin-bottom:14px">
+      <h2 style="font-size:24px;font-weight:700">${currentSite.name}</h2>
       ${currentSite.address ? `<p style="color:var(--text2);font-size:13px">📍 ${currentSite.address}</p>` : ''}
       ${currentSite.notes ? `<p style="color:var(--text2);font-size:13px;margin-top:4px">${currentSite.notes}</p>` : ''}
     </div>
+    <div class="search-bar">
+      <input class="search-input" placeholder="🔍 Hae tästä työmaasta..." oninput="doSiteSearch(this.value,'${currentSite.id}')">
+    </div>
+    <div id="siteSearchResults" class="hidden"></div>
     <div class="section-title">Vyöhykkeet</div>
     <div id="zoneGrid" class="zone-grid"><div class="loader"><div class="spinner"></div></div></div>
     <div class="section-title" style="margin-top:20px">Kaikki media</div>
-    <div id="allMediaGrid" class="media-grid"></div>
-  `;
+    <div id="allMediaGrid" class="media-grid"></div>`;
 }
 
 window.goBack = () => {
@@ -764,7 +865,63 @@ window.goBack = () => {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('pageTyomaat').classList.add('active');
   document.querySelectorAll('.bnav-item')[0].classList.add('active');
-  updateFab();
+  document.getElementById('contactsBtn').style.display = 'none';
+};
+
+// ==================== SEARCH ====================
+window.doGlobalSearch = async (val) => {
+  const res = document.getElementById('globalSearchResults');
+  if (val.length < 2) { res.classList.add('hidden'); return; }
+  res.classList.remove('hidden');
+  const v = val.toLowerCase();
+  const results = [];
+  // Search sites
+  currentSites.forEach(s => {
+    if ((s.name||'').toLowerCase().includes(v) || (s.address||'').toLowerCase().includes(v)) {
+      results.push({ type:'Työmaa', title: s.name, sub: s.address||'', action: () => openSite(s.id) });
+    }
+  });
+  // Search cached media
+  allMediaCache.forEach(m => {
+    if ((m.caption||'').toLowerCase().includes(v) || (m.date||'').includes(v)) {
+      const site = currentSites.find(s => s.id === m.siteId);
+      results.push({ type:'Kuva/Video', title: m.caption||'Ei kuvausta', sub: (site?.name||'') + ' • ' + (m.date||''), action: () => { openSite(m.siteId); } });
+    }
+  });
+  // Search reports
+  allReportsCache.forEach(r => {
+    if ((r.work||'').toLowerCase().includes(v) || (r.notes||'').toLowerCase().includes(v)) {
+      const site = currentSites.find(s => s.id === r.siteId);
+      results.push({ type:'Raportti', title: r.date + ' — ' + (r.weather||''), sub: (r.work||'').substring(0,60) + '...', action: () => { showPage('Raportit', document.querySelectorAll('.bnav-item')[3]); document.getElementById('reportSiteSelect').value = r.siteId; loadReport(); } });
+    }
+  });
+  if (!results.length) { res.innerHTML = '<div class="search-result-item"><div class="search-result-type">Ei tuloksia</div></div>'; return; }
+  res.innerHTML = `<div class="search-results">${results.slice(0,10).map((r,i) => `
+    <div class="search-result-item" onclick="searchResults[${i}].action();document.getElementById('globalSearchResults').classList.add('hidden')">
+      <div class="search-result-type">${r.type}</div>
+      <div class="search-result-title">${r.title}</div>
+      ${r.sub ? `<div class="search-result-sub">${r.sub}</div>` : ''}
+    </div>`).join('')}</div>`;
+  window.searchResults = results;
+};
+
+window.doSiteSearch = (val, siteId) => {
+  const res = document.getElementById('siteSearchResults');
+  if (val.length < 2) { res.classList.add('hidden'); return; }
+  res.classList.remove('hidden');
+  const v = val.toLowerCase();
+  const siteMedia = allMediaCache.filter(m => m.siteId === siteId && ((m.caption||'').toLowerCase().includes(v) || (m.date||'').includes(v) || (m.tags||[]).some(t => t.includes(v))));
+  const siteZones = allZonesCache.filter(z => z.siteId === siteId && ((z.name||'').toLowerCase().includes(v) || (z.type||'').toLowerCase().includes(v)));
+  if (!siteMedia.length && !siteZones.length) { res.innerHTML = '<div class="search-results"><div class="search-result-item"><div class="search-result-type">Ei tuloksia</div></div></div>'; return; }
+  res.innerHTML = `<div class="search-results">
+    ${siteZones.map(z => `<div class="search-result-item" onclick="openZone('${z.id}')"><div class="search-result-type">Vyöhyke</div><div class="search-result-title">${z.name}</div></div>`).join('')}
+    ${siteMedia.slice(0,8).map((m,i) => `<div class="search-result-item" onclick="quickOpenMedia('${m.id}')"><div class="search-result-type">Media • ${m.date||''}</div><div class="search-result-title">${m.caption||'Ei kuvausta'}</div><div class="search-result-sub">${(m.tags||[]).join(', ')}</div></div>`).join('')}
+  </div>`;
+};
+
+window.quickOpenMedia = (mediaId) => {
+  const idx = currentMediaItems.findIndex(m => m.id === mediaId);
+  if (idx >= 0) openLightbox(idx);
 };
 
 // ==================== ZONES ====================
@@ -772,7 +929,7 @@ function loadZones(siteId) {
   const q = query(collection(db, 'zones'), where('siteId', '==', siteId), orderBy('createdAt', 'asc'));
   onSnapshot(q, snap => {
     currentZones = [];
-    snap.forEach(d => currentZones.push({ id: d.id, ...d.data() }));
+    snap.forEach(d => { const z = {id:d.id,...d.data()}; currentZones.push(z); allZonesCache = allZonesCache.filter(z2=>z2.siteId!==siteId); allZonesCache.push(...currentZones); });
     renderZones();
     loadAllMedia(siteId);
     updateMediaZoneSelect();
@@ -783,7 +940,7 @@ function renderZones() {
   const grid = document.getElementById('zoneGrid');
   if (!grid) return;
   if (!currentZones.length) {
-    grid.innerHTML = `<div class="empty" style="grid-column:span 2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg><h3>Ei vyöhykkeitä</h3><p>Lisää vyöhyke + painikkeella</p></div>`;
+    grid.innerHTML = `<div class="empty" style="grid-column:span 2"><h3>Ei vyöhykkeitä</h3><p>Lisää vyöhyke + painikkeella</p></div>`;
     return;
   }
   grid.innerHTML = currentZones.map(z => `
@@ -792,30 +949,25 @@ function renderZones() {
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
       <div class="zone-info">
-        <div class="zone-name">${z.name || z.type}</div>
+        <div class="zone-name">${z.name||z.type}</div>
         <div class="zone-count text-muted" id="zcount_${z.id}">0 tiedostoa</div>
       </div>
-    </div>
-  `).join('');
-  // Load media counts for each zone
+    </div>`).join('');
   currentZones.forEach(z => loadZoneThumb(z));
 }
 
-async function loadZoneThumb(zone) {
+function loadZoneThumb(zone) {
   const q = query(collection(db, 'media'), where('zoneId', '==', zone.id), orderBy('date', 'desc'));
   onSnapshot(q, snap => {
-    const items = [];
-    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-    const countEl = document.getElementById('zcount_' + zone.id);
-    const thumbEl = document.getElementById('zthumb_' + zone.id);
+    const items = []; snap.forEach(d => items.push({id:d.id,...d.data()}));
+    const countEl = document.getElementById('zcount_'+zone.id);
+    const thumbEl = document.getElementById('zthumb_'+zone.id);
     if (countEl) countEl.textContent = items.length + ' tiedostoa';
     if (thumbEl && items.length > 0) {
       const first = items[0];
-      if (first.type === 'video') {
-        thumbEl.innerHTML = `<video src="${first.url}" style="width:100%;height:100%;object-fit:cover" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`;
-      } else {
-        thumbEl.innerHTML = `<img src="${first.url}" alt="" style="width:100%;height:100%;object-fit:cover">`;
-      }
+      thumbEl.innerHTML = first.type==='video'
+        ? `<video src="${first.url}" style="width:100%;height:100%;object-fit:cover" muted></video>`
+        : `<img src="${first.url}" alt="" style="width:100%;height:100%;object-fit:cover">`;
     }
   });
 }
@@ -826,108 +978,115 @@ window.saveZone = async () => {
   const name = document.getElementById('zoneName').value.trim();
   try {
     await addDoc(collection(db, 'zones'), {
-      siteId: currentSite.id,
-      type,
-      name: name || type,
+      siteId: currentSite.id, type, name: name||type,
       notes: document.getElementById('zoneNotes').value.trim(),
-      createdBy: currentUser.uid,
-      createdByName: currentUser.displayName || currentUser.email,
+      createdBy: currentUser.uid, createdByName: currentUser.displayName||currentUser.email,
       createdAt: serverTimestamp()
     });
     closeModal('modalZone');
     document.getElementById('zoneName').value = '';
     document.getElementById('zoneNotes').value = '';
     toast('Vyöhyke lisätty!', 'success');
-  } catch(e) {
-    toast('Virhe: ' + e.message, 'error');
-  }
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
 };
 
-// Zone detail view
+window.deleteZone = async (zoneId) => {
+  try {
+    await deleteDoc(doc(db, 'zones', zoneId));
+    toast('Vyöhyke poistettu', 'success');
+    renderDetailPage(); loadZones(currentSite.id);
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+
 window.openZone = (zoneId) => {
   const zone = currentZones.find(z => z.id === zoneId);
   if (!zone) return;
   const q = query(collection(db, 'media'), where('zoneId', '==', zoneId), orderBy('date', 'desc'));
   onSnapshot(q, snap => {
-    const items = [];
-    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+    const items = []; snap.forEach(d => items.push({id:d.id,...d.data()}));
     currentMediaItems = items;
-    showZoneDetail(zone, items);
+    document.getElementById('detailContent').innerHTML = `
+      <div class="flex-between" style="margin-bottom:14px">
+        <button class="btn btn-secondary btn-sm" onclick="renderDetailPage();loadZones('${currentSite.id}')">← Vyöhykkeet</button>
+        <div style="display:flex;gap:8px">
+          <span class="badge badge-accent">${zone.type}</span>
+          <button class="btn-icon btn-danger btn-sm" onclick="confirmDelete('zone','${zone.id}')" title="Poista vyöhyke">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:4px">${zone.name}</h2>
+      ${zone.notes ? `<p style="color:var(--text2);font-size:13px;margin-bottom:12px">${zone.notes}</p>` : ''}
+      <div class="section-title">Media (${items.length})</div>
+      <div class="media-grid">${items.length ? items.map((m,i) => `
+        <div class="media-item" onclick="openLightbox(${i})">
+          ${m.type==='video' ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>` : `<img src="${m.url}" alt="" loading="lazy">`}
+          <div class="media-tags">${(m.tags||[]).map(t => `<div class="media-tag-dot" style="background:${tagColor(t)}" title="${t}"></div>`).join('')}</div>
+          <div class="media-date">${m.date||''}</div>
+        </div>`).join('') : `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`}
+      </div>`;
   });
 };
 
-function showZoneDetail(zone, items) {
-  document.getElementById('detailContent').innerHTML = `
-    <div class="flex-between" style="margin-bottom:16px">
-      <button class="btn btn-secondary btn-sm" onclick="renderDetailPage();loadZones('${currentSite.id}')">← Vyöhykkeet</button>
-      <span class="badge badge-accent">${zone.type}</span>
-    </div>
-    <h2 style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px">${zone.name}</h2>
-    ${zone.notes ? `<p style="color:var(--text2);font-size:13px;margin-bottom:14px">${zone.notes}</p>` : ''}
-    <div class="section-title">Media (${items.length})</div>
-    <div class="media-grid">${items.length ? items.map((m,i) => `
-      <div class="media-item" onclick="openLightbox(${i})">
-        ${m.type === 'video'
-          ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`
-          : `<img src="${m.url}" alt="" loading="lazy">`}
-        <div class="media-date">${m.date || ''}</div>
-      </div>`).join('')
-      : `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`}
-    </div>
-  `;
+function tagColor(t) {
+  const c = {ongelma:'#e74c3c',korjattu:'#2ecc71',tarkastus:'#3498db',hyvaksytty:'#9b59b6',odottaa:'#f0a500'};
+  return c[t] || '#555';
 }
 
 // ==================== ALL MEDIA ====================
 function loadAllMedia(siteId) {
   const q = query(collection(db, 'media'), where('siteId', '==', siteId), orderBy('date', 'desc'));
   onSnapshot(q, snap => {
-    const items = [];
-    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+    const items = []; snap.forEach(d => items.push({id:d.id,...d.data()}));
+    currentMediaItems = items;
+    allMediaCache = [...allMediaCache.filter(m => m.siteId !== siteId), ...items];
     const grid = document.getElementById('allMediaGrid');
     if (!grid) return;
-    currentMediaItems = items;
-    if (!items.length) {
-      grid.innerHTML = `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`;
-      return;
-    }
+    if (!items.length) { grid.innerHTML = `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`; return; }
     grid.innerHTML = items.map((m,i) => `
       <div class="media-item" onclick="openLightbox(${i})">
-        ${m.type === 'video'
-          ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`
-          : `<img src="${m.url}" alt="" loading="lazy">`}
-        <div class="media-date">${m.date || ''}</div>
+        ${m.type==='video' ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>` : `<img src="${m.url}" alt="" loading="lazy">`}
+        <div class="media-tags">${(m.tags||[]).map(t => `<div class="media-tag-dot" style="background:${tagColor(t)}" title="${t}"></div>`).join('')}</div>
+        <div class="media-date">${m.date||''}</div>
       </div>`).join('');
   });
 }
 
+// Load all media globally for search
+async function loadAllMediaGlobal() {
+  const q = query(collection(db, 'media'), orderBy('date', 'desc'));
+  onSnapshot(q, snap => { allMediaCache = []; snap.forEach(d => allMediaCache.push({id:d.id,...d.data()})); });
+  const qr = query(collection(db, 'reports'), orderBy('date', 'desc'));
+  onSnapshot(qr, snap => { allReportsCache = []; snap.forEach(d => allReportsCache.push({id:d.id,...d.data()})); });
+}
+loadAllMediaGlobal();
+
 // ==================== UPLOAD ====================
 function openMediaModal() {
-  updateMediaZoneSelect();
+  updateMediaZoneSelect(); pendingFiles = []; pendingTags = [];
   document.getElementById('uploadPreview').innerHTML = '';
-  pendingFiles = [];
   document.getElementById('uploadProgress').classList.add('hidden');
+  document.getElementById('mediaCaption').value = '';
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
   openModal('modalMedia');
 }
 
 function updateMediaZoneSelect() {
-  const sel = document.getElementById('mediaZone');
-  sel.innerHTML = currentZones.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
+  document.getElementById('mediaZone').innerHTML = currentZones.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
 }
 
-// File input
-document.getElementById('fileInput').addEventListener('change', e => {
-  handleFiles(Array.from(e.target.files));
-});
+window.toggleTag = (btn, tag) => {
+  btn.classList.toggle('active');
+  if (btn.classList.contains('active')) { if (!pendingTags.includes(tag)) pendingTags.push(tag); }
+  else pendingTags = pendingTags.filter(t => t !== tag);
+};
 
-// Drag & drop
+document.getElementById('fileInput').addEventListener('change', e => handleFiles(Array.from(e.target.files)));
+
 const uploadArea = document.getElementById('uploadArea');
 uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
 uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
-uploadArea.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadArea.classList.remove('drag');
-  handleFiles(Array.from(e.dataTransfer.files));
-});
+uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('drag'); handleFiles(Array.from(e.dataTransfer.files)); });
 
 function handleFiles(files) {
   files.forEach(file => {
@@ -935,133 +1094,104 @@ function handleFiles(files) {
     pendingFiles.push(file);
     const reader = new FileReader();
     reader.onload = ev => {
-      const preview = document.getElementById('uploadPreview');
       const div = document.createElement('div');
       div.className = 'upload-preview-item';
       const idx = pendingFiles.length - 1;
-      if (file.type.startsWith('video')) {
-        div.innerHTML = `<video src="${ev.target.result}" muted style="width:100%;height:100%;object-fit:cover"></video>`;
-      } else {
-        div.innerHTML = `<img src="${ev.target.result}" alt="">`;
-      }
+      div.innerHTML = file.type.startsWith('video')
+        ? `<video src="${ev.target.result}" muted style="width:100%;height:100%;object-fit:cover"></video>`
+        : `<img src="${ev.target.result}" alt="">`;
       div.innerHTML += `<button class="remove-preview" onclick="removePreview(${idx},this.parentElement)">×</button>`;
-      preview.appendChild(div);
+      document.getElementById('uploadPreview').appendChild(div);
     };
     reader.readAsDataURL(file);
   });
 }
 
-window.removePreview = (idx, el) => {
-  pendingFiles[idx] = null;
-  el.remove();
-};
+window.removePreview = (idx, el) => { pendingFiles[idx] = null; el.remove(); };
 
 window.uploadMedia = async () => {
   const files = pendingFiles.filter(Boolean);
   if (!files.length) return toast('Valitse ensin tiedostoja', 'error');
   const zoneId = document.getElementById('mediaZone').value;
   if (!zoneId) return toast('Valitse vyöhyke', 'error');
-
   document.getElementById('uploadProgress').classList.remove('hidden');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
-
   let uploaded = 0;
   for (const file of files) {
     try {
-      progressText.textContent = `Ladataan ${uploaded + 1}/${files.length}...`;
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-      formData.append('cloud_name', CLOUD_NAME);
+      document.getElementById('progressText').textContent = `Ladataan ${uploaded+1}/${files.length}...`;
+      const fd = new FormData();
+      fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET); fd.append('cloud_name', CLOUD_NAME);
       const isVideo = file.type.startsWith('video');
-      const endpoint = isVideo
-        ? `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`
-        : `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
-      const res = await fetch(endpoint, { method: 'POST', body: formData });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${isVideo?'video':'image'}/upload`, {method:'POST',body:fd});
       const data = await res.json();
       if (!data.secure_url) throw new Error('Upload failed');
-
       await addDoc(collection(db, 'media'), {
-        siteId: currentSite.id,
-        zoneId,
-        url: data.secure_url,
-        publicId: data.public_id,
+        siteId: currentSite.id, zoneId, url: data.secure_url, publicId: data.public_id,
         type: isVideo ? 'video' : 'image',
         caption: document.getElementById('mediaCaption').value.trim(),
         date: document.getElementById('mediaDate').value,
-        uploadedBy: currentUser.uid,
-        uploadedByName: currentUser.displayName || currentUser.email,
-        comments: [],
-        createdAt: serverTimestamp()
+        tags: [...pendingTags],
+        uploadedBy: currentUser.uid, uploadedByName: currentUser.displayName||currentUser.email,
+        comments: [], createdAt: serverTimestamp()
       });
       uploaded++;
-      progressFill.style.width = (uploaded / files.length * 100) + '%';
-    } catch(e) {
-      toast('Virhe tiedostossa: ' + e.message, 'error');
-    }
+      document.getElementById('progressFill').style.width = (uploaded/files.length*100) + '%';
+    } catch(e) { toast('Virhe: ' + e.message, 'error'); }
   }
   closeModal('modalMedia');
-  pendingFiles = [];
+  pendingFiles = []; pendingTags = [];
   document.getElementById('uploadPreview').innerHTML = '';
   document.getElementById('mediaCaption').value = '';
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
   toast(uploaded + ' tiedostoa ladattu!', 'success');
 };
 
 // ==================== CAMERA ====================
 window.openCamera = async () => {
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode }, audio: false });
+    cameraStream = await navigator.mediaDevices.getUserMedia({video:{facingMode},audio:false});
     document.getElementById('cameraPreview').srcObject = cameraStream;
     document.getElementById('cameraView').classList.add('active');
-  } catch(e) {
-    toast('Kamera ei saatavilla: ' + e.message, 'error');
-  }
+  } catch(e) { toast('Kamera ei saatavilla: ' + e.message, 'error'); }
 };
-
 window.closeCamera = () => {
-  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  if (cameraStream) { cameraStream.getTracks().forEach(t=>t.stop()); cameraStream=null; }
   document.getElementById('cameraView').classList.remove('active');
 };
-
 window.switchCamera = async () => {
-  facingMode = facingMode === 'environment' ? 'user' : 'environment';
-  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); }
-  cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode }, audio: false });
+  facingMode = facingMode==='environment'?'user':'environment';
+  if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop());
+  cameraStream = await navigator.mediaDevices.getUserMedia({video:{facingMode},audio:false});
   document.getElementById('cameraPreview').srcObject = cameraStream;
 };
-
 window.takePhoto = () => {
   const video = document.getElementById('cameraPreview');
   const canvas = document.getElementById('cameraCanvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
   canvas.toBlob(blob => {
-    const file = new File([blob], 'kuva_' + Date.now() + '.jpg', { type: 'image/jpeg' });
-    handleFiles([file]);
-    closeCamera();
-    toast('Kuva lisätty!', 'success');
-  }, 'image/jpeg', 0.9);
+    const file = new File([blob],'kuva_'+Date.now()+'.jpg',{type:'image/jpeg'});
+    handleFiles([file]); closeCamera(); toast('Kuva lisätty!','success');
+  },'image/jpeg',0.9);
 };
 
 // ==================== LIGHTBOX ====================
 window.openLightbox = (idx) => {
   lightboxMedia = currentMediaItems[idx];
   if (!lightboxMedia) return;
-  const lb = document.getElementById('lightbox');
-  lb.classList.add('active');
+  document.getElementById('lightbox').classList.add('active');
   const zone = currentZones.find(z => z.id === lightboxMedia.zoneId);
-  document.getElementById('lbZone').textContent = zone ? zone.name : '';
+  document.getElementById('lbZone').textContent = zone ? '📁 ' + zone.name : '';
   const body = document.getElementById('lbBody');
-  if (lightboxMedia.type === 'video') {
-    body.innerHTML = `<video src="${lightboxMedia.url}" controls style="max-width:100%;max-height:60vh;border-radius:8px"></video>`;
-  } else {
-    body.innerHTML = `<img src="${lightboxMedia.url}" alt="" style="max-width:100%;max-height:60vh;border-radius:8px">`;
-  }
+  body.innerHTML = lightboxMedia.type==='video'
+    ? `<video src="${lightboxMedia.url}" controls style="max-width:100%;max-height:100%;border-radius:8px"></video>`
+    : `<img src="${lightboxMedia.url}" alt="" style="max-width:100%;max-height:100%;border-radius:8px">`;
   document.getElementById('lbCaption').textContent = lightboxMedia.caption || '';
-  document.getElementById('lbMeta').textContent = `${lightboxMedia.date || ''} • ${lightboxMedia.uploadedByName || ''}`;
-  renderComments(lightboxMedia.comments || []);
+  document.getElementById('lbMeta').textContent = `${lightboxMedia.date||''} • ${lightboxMedia.uploadedByName||''}`;
+  const tagsEl = document.getElementById('lbTags');
+  const tagLabels = {ongelma:'🔴 Ongelma',korjattu:'🟢 Korjattu',tarkastus:'🔵 Tarkastus',hyvaksytty:'🟣 Hyväksytty',odottaa:'🟡 Odottaa'};
+  tagsEl.innerHTML = (lightboxMedia.tags||[]).map(t => `<span class="badge" style="background:${tagColor(t)}22;color:${tagColor(t)};border:1px solid ${tagColor(t)}44">${tagLabels[t]||t}</span>`).join('');
+  renderComments(lightboxMedia.comments||[]);
 };
 
 window.closeLightbox = () => {
@@ -1069,281 +1199,343 @@ window.closeLightbox = () => {
   lightboxMedia = null;
 };
 
-window.deleteMedia = async () => {
+async function deleteMedia() {
   if (!lightboxMedia) return;
-  if (!confirm('Poistetaanko tämä tiedosto?')) return;
   try {
     await deleteDoc(doc(db, 'media', lightboxMedia.id));
-    closeLightbox();
-    toast('Poistettu', 'success');
-  } catch(e) {
-    toast('Virhe: ' + e.message, 'error');
-  }
-};
+    closeLightbox(); toast('Poistettu', 'success');
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
+}
+window.deleteMedia = deleteMedia;
 
 function renderComments(comments) {
   const el = document.getElementById('lbComments');
-  if (!comments.length) { el.innerHTML = '<p style="font-size:12px;color:var(--text3);margin-bottom:8px">Ei kommentteja</p>'; return; }
+  if (!comments.length) { el.innerHTML = '<p style="font-size:12px;color:var(--text3)">Ei kommentteja vielä</p>'; return; }
   el.innerHTML = comments.map(c => `
     <div class="comment">
       <div class="comment-avatar">${(c.author||'?')[0].toUpperCase()}</div>
       <div class="comment-body">
-        <div class="comment-author">${c.author || 'Tuntematon'}</div>
+        <div class="comment-author">${c.author||'Tuntematon'}</div>
         <div class="comment-text">${c.text}</div>
         <div class="comment-time">${c.time ? new Date(c.time).toLocaleString('fi-FI') : ''}</div>
       </div>
     </div>`).join('');
+  el.scrollTop = el.scrollHeight;
 }
 
 window.addComment = async () => {
   const input = document.getElementById('lbCommentInput');
   const text = input.value.trim();
   if (!text || !lightboxMedia) return;
-  const comment = {
-    text,
-    author: currentUser.displayName || currentUser.email,
-    uid: currentUser.uid,
-    time: Date.now()
-  };
+  const comment = { text, author: currentUser.displayName||currentUser.email, uid: currentUser.uid, time: Date.now() };
   try {
-    await updateDoc(doc(db, 'media', lightboxMedia.id), {
-      comments: arrayUnion(comment)
-    });
-    lightboxMedia.comments = [...(lightboxMedia.comments || []), comment];
-    renderComments(lightboxMedia.comments);
-    input.value = '';
-  } catch(e) {
-    toast('Virhe: ' + e.message, 'error');
-  }
+    await updateDoc(doc(db,'media',lightboxMedia.id), { comments: arrayUnion(comment) });
+    lightboxMedia.comments = [...(lightboxMedia.comments||[]), comment];
+    renderComments(lightboxMedia.comments); input.value = '';
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
 };
 
 // ==================== MAP ====================
 function initMap() {
-  if (leafletMap) {
-    leafletMap.invalidateSize();
-    updateMapMarkers();
-    return;
-  }
-  leafletMap = L.map('mapContainer').setView([64.5, 26.0], 5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(leafletMap);
+  if (leafletMap) { leafletMap.invalidateSize(); updateMapMarkers(); return; }
+  leafletMap = L.map('mapContainer').setView([64.5,26.0],5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(leafletMap);
   updateMapMarkers();
 }
-
 async function updateMapMarkers() {
   if (!leafletMap) return;
-  markers.forEach(m => m.remove());
-  markers = [];
+  markers.forEach(m=>m.remove()); markers=[];
   const mapList = document.getElementById('mapSiteList');
   mapList.innerHTML = '';
-
   for (const site of currentSites) {
     if (!site.address) continue;
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(site.address)}`);
       const data = await res.json();
       if (data && data[0]) {
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon);
-        const marker = L.marker([lat, lng]).addTo(leafletMap);
+        const lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+        const marker = L.marker([lat,lng]).addTo(leafletMap);
         marker.bindPopup(`<b>${site.name}</b><br>${site.address}`);
         markers.push(marker);
-        mapList.innerHTML += `
-          <div class="card" style="margin-bottom:8px;cursor:pointer" onclick="flyToSite(${lat},${lng},'${site.name}')">
-            <div class="flex-between">
-              <span style="font-family:'Rajdhani',sans-serif;font-weight:700">${site.name}</span>
-              <span style="font-size:12px;color:var(--text2)">📍 ${site.address}</span>
-            </div>
-          </div>`;
+        mapList.innerHTML += `<div class="card" style="cursor:pointer;margin-bottom:8px" onclick="flyToSite(${lat},${lng})"><div class="flex-between"><span style="font-family:'Rajdhani',sans-serif;font-weight:700">${site.name}</span><span style="font-size:12px;color:var(--text2)">📍 ${site.address}</span></div></div>`;
       }
     } catch(e) {}
   }
 }
-
-window.flyToSite = (lat, lng, name) => {
-  if (leafletMap) {
-    leafletMap.flyTo([lat, lng], 15);
-    markers.forEach(m => { if (m.getLatLng().lat === lat) m.openPopup(); });
-  }
-};
+window.flyToSite = (lat,lng) => { if (leafletMap) leafletMap.flyTo([lat,lng],15); };
 
 // ==================== REPORTS ====================
-function loadReportSites() {
-  updateReportSelects();
-}
-
+function loadReportSites() { updateReportSelects(); }
 function updateReportSelects() {
+  const opts = currentSites.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
   const sel1 = document.getElementById('reportSiteSelect');
   const sel2 = document.getElementById('reportSite');
-  const opts = currentSites.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
   if (sel1) sel1.innerHTML = '<option value="">-- Valitse työmaa --</option>' + opts;
   if (sel2) sel2.innerHTML = opts;
 }
-
-window.loadReport = async () => {
+window.loadReport = () => {
   const siteId = document.getElementById('reportSiteSelect').value;
   const content = document.getElementById('reportContent');
   if (!siteId) { content.innerHTML = ''; return; }
   content.innerHTML = '<div class="loader"><div class="spinner"></div>Ladataan...</div>';
-  const q = query(collection(db, 'reports'), where('siteId', '==', siteId), orderBy('date', 'desc'));
+  const q = query(collection(db,'reports'),where('siteId','==',siteId),orderBy('date','desc'));
   onSnapshot(q, snap => {
-    const reports = [];
-    snap.forEach(d => reports.push({ id: d.id, ...d.data() }));
-    if (!reports.length) {
-      content.innerHTML = `<div class="empty"><h3>Ei raportteja</h3><p>Lisää ensimmäinen raportti + painikkeella</p></div>`;
-      return;
-    }
+    const reports = []; snap.forEach(d => reports.push({id:d.id,...d.data()}));
+    allReportsCache = [...allReportsCache.filter(r=>r.siteId!==siteId),...reports];
+    if (!reports.length) { content.innerHTML = `<div class="empty"><h3>Ei raportteja</h3><p>Lisää ensimmäinen raportti + painikkeella</p></div>`; return; }
     content.innerHTML = reports.map(r => `
       <div class="report-day">
-        <div class="report-day-title">${r.date} ${r.weather || ''}</div>
+        <div class="report-day-title">${r.date} ${r.weather||''}</div>
         <div class="report-entry">
-          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:6px">Päivän työt</div>
-          <p style="font-size:13px;color:var(--text2)">${r.work || '-'}</p>
+          <div class="flex-between" style="margin-bottom:8px">
+            <span style="font-family:'Rajdhani',sans-serif;font-weight:700">Päivän työt</span>
+            <button class="btn-icon btn-danger" onclick="confirmDelete('report','${r.id}')" style="padding:4px">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+          </div>
+          <p style="font-size:13px;color:var(--text2)">${r.work||'-'}</p>
           ${r.workers ? `<p style="font-size:12px;color:var(--text3);margin-top:6px">👷 ${r.workers} työntekijää</p>` : ''}
           ${r.notes ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)">${r.notes}</div>` : ''}
-          <p style="font-size:11px;color:var(--text3);margin-top:8px">Kirjannut: ${r.createdByName || '-'}</p>
+          <p style="font-size:11px;color:var(--text3);margin-top:8px">Kirjannut: ${r.createdByName||'-'}</p>
         </div>
       </div>`).join('');
   });
 };
-
-function openReportModal() {
-  updateReportSelects();
-  openModal('modalReport');
-}
-
 window.saveReport = async () => {
   const siteId = document.getElementById('reportSite').value;
   const date = document.getElementById('reportDate').value;
   const work = document.getElementById('reportWork').value.trim();
-  if (!siteId || !date || !work) return toast('Täytä pakolliset kentät', 'error');
+  if (!siteId||!date||!work) return toast('Täytä pakolliset kentät','error');
   try {
-    await addDoc(collection(db, 'reports'), {
-      siteId,
-      date,
-      work,
-      workers: document.getElementById('reportWorkers').value || 0,
+    await addDoc(collection(db,'reports'),{
+      siteId, date, work,
+      workers: document.getElementById('reportWorkers').value||0,
       weather: document.getElementById('reportWeather').value,
       notes: document.getElementById('reportNotes').value.trim(),
-      createdBy: currentUser.uid,
-      createdByName: currentUser.displayName || currentUser.email,
+      createdBy: currentUser.uid, createdByName: currentUser.displayName||currentUser.email,
       createdAt: serverTimestamp()
     });
     closeModal('modalReport');
     document.getElementById('reportWork').value = '';
     document.getElementById('reportNotes').value = '';
-    toast('Raportti tallennettu!', 'success');
-  } catch(e) {
-    toast('Virhe: ' + e.message, 'error');
-  }
+    toast('Raportti tallennettu!','success');
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+window.deleteReport = async (id) => {
+  try { await deleteDoc(doc(db,'reports',id)); toast('Raportti poistettu','success'); loadReport(); }
+  catch(e) { toast('Virhe: ' + e.message, 'error'); }
 };
 
-// ==================== PDF EXPORT ====================
+// ==================== MEASUREMENTS ====================
+function loadMeasSites() { updateMeasSelects(); }
+function updateMeasSelects() {
+  const opts = currentSites.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  const sel = document.getElementById('measSiteSelect');
+  const sel2 = document.getElementById('measSite');
+  if (sel) sel.innerHTML = '<option value="">-- Valitse työmaa --</option>' + opts;
+  if (sel2) sel2.innerHTML = opts;
+}
+window.loadMeasurements = () => {
+  const siteId = document.getElementById('measSiteSelect').value;
+  const content = document.getElementById('measContent');
+  if (!siteId) { content.innerHTML=''; return; }
+  content.innerHTML = '<div class="loader"><div class="spinner"></div>Ladataan...</div>';
+  const q = query(collection(db,'measurements'),where('siteId','==',siteId),orderBy('createdAt','desc'));
+  onSnapshot(q, snap => {
+    const items = []; snap.forEach(d => items.push({id:d.id,...d.data()}));
+    if (!items.length) { content.innerHTML = `<div class="empty"><h3>Ei mittauksia</h3><p>Lisää ensimmäinen mittaus + painikkeella</p></div>`; return; }
+    const units = {area:'m²',volume:'m³',length:'m'};
+    content.innerHTML = items.map(m => `
+      <div class="measurement-card">
+        <div class="flex-between">
+          <div class="measurement-name">${m.name}</div>
+          <button class="btn-icon btn-danger" onclick="confirmDelete('measurement','${m.id}')" style="padding:4px">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+        <div class="measurement-result">${m.result} ${units[m.type]||''}</div>
+        <div class="measurement-detail">${m.type==='area'?`${m.length}m × ${m.width}m`:m.type==='volume'?`${m.length}m × ${m.width}m × ${m.depth}m`:`${m.length}m`}</div>
+        ${m.note ? `<div style="font-size:12px;color:var(--accent);margin-top:4px">📝 ${m.note}</div>` : ''}
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Lisätty: ${m.createdByName||'-'}</div>
+      </div>`).join('');
+  });
+};
+
+window.updateMeasFields = () => {
+  const type = document.getElementById('measType').value;
+  const depthGroup = document.getElementById('measDepthGroup');
+  const op2 = document.getElementById('measOp2');
+  depthGroup.style.display = type==='volume' ? 'block' : 'none';
+  op2.style.display = type==='volume' ? 'block' : 'none';
+  if (type==='length') {
+    document.getElementById('measW').closest('.form-group').style.display='none';
+    document.querySelector('.calc-op').style.display='none';
+  } else {
+    document.getElementById('measW').closest('.form-group').style.display='block';
+    document.querySelector('.calc-op').style.display='block';
+  }
+  calcMeas();
+};
+
+window.calcMeas = () => {
+  const type = document.getElementById('measType').value;
+  const l = parseFloat(document.getElementById('measL').value)||0;
+  const w = parseFloat(document.getElementById('measW').value)||0;
+  const d = parseFloat(document.getElementById('measD').value)||0;
+  let result = 0, unit = '';
+  if (type==='area') { result = l*w; unit='m²'; }
+  else if (type==='volume') { result = l*w*d; unit='m³'; }
+  else { result = l; unit='m'; }
+  document.getElementById('measResult').textContent = `Tulos: ${result.toFixed(2)} ${unit}`;
+};
+
+window.saveMittaus = async () => {
+  const siteId = document.getElementById('measSite').value;
+  const name = document.getElementById('measName').value.trim();
+  const type = document.getElementById('measType').value;
+  const l = parseFloat(document.getElementById('measL').value)||0;
+  const w = parseFloat(document.getElementById('measW').value)||0;
+  const d = parseFloat(document.getElementById('measD').value)||0;
+  if (!siteId||!name||!l) return toast('Täytä pakolliset kentät','error');
+  let result = 0;
+  if (type==='area') result = +(l*w).toFixed(2);
+  else if (type==='volume') result = +(l*w*d).toFixed(2);
+  else result = +l.toFixed(2);
+  try {
+    await addDoc(collection(db,'measurements'),{
+      siteId, name, type, length:l, width:w, depth:d, result,
+      note: document.getElementById('measNote').value.trim(),
+      createdBy: currentUser.uid, createdByName: currentUser.displayName||currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modalMittaus');
+    ['measName','measL','measW','measD','measNote'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('measResult').textContent='Tulos: — m²';
+    toast('Mittaus tallennettu!','success');
+    if (document.getElementById('measSiteSelect').value===siteId) loadMeasurements();
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+window.deleteMeasurement = async (id) => {
+  try { await deleteDoc(doc(db,'measurements',id)); toast('Mittaus poistettu','success'); }
+  catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+
+// ==================== CONTACTS ====================
+function updateContactSelects() {
+  const opts = '<option value="">Kaikki työmaat</option>' + currentSites.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  const sel = document.getElementById('contactSite');
+  if (sel) sel.innerHTML = opts;
+}
+function loadContacts(siteId) {
+  const q = query(collection(db,'contacts'),orderBy('createdAt','desc'));
+  onSnapshot(q, snap => {
+    const all = []; snap.forEach(d => all.push({id:d.id,...d.data()}));
+    const filtered = all.filter(c => !c.siteId || c.siteId===siteId);
+    const list = document.getElementById('contactsList');
+    if (!list) return;
+    if (!filtered.length) { list.innerHTML = '<div class="empty"><p>Ei yhteystietoja</p></div>'; return; }
+    list.innerHTML = filtered.map(c => `
+      <div class="contact-card">
+        <div class="contact-avatar">${(c.name||'?')[0].toUpperCase()}</div>
+        <div class="contact-info">
+          <div class="contact-name">${c.name}</div>
+          <div class="contact-role">${c.role||''}</div>
+          ${c.phone ? `<a href="tel:${c.phone}" class="contact-phone">📞 ${c.phone}</a>` : ''}
+          ${c.email ? `<div style="font-size:11px;color:var(--text2);margin-top:2px">✉️ ${c.email}</div>` : ''}
+        </div>
+        <button class="btn-icon btn-danger" onclick="confirmDelete('contact','${c.id}')" style="padding:4px;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>`).join('');
+  });
+}
+window.saveContact = async () => {
+  const name = document.getElementById('contactName').value.trim();
+  const phone = document.getElementById('contactPhone').value.trim();
+  if (!name||!phone) return toast('Anna nimi ja puhelinnumero','error');
+  try {
+    await addDoc(collection(db,'contacts'),{
+      siteId: document.getElementById('contactSite').value||null,
+      name, role: document.getElementById('contactRole').value,
+      phone, email: document.getElementById('contactEmail').value.trim(),
+      createdBy: currentUser.uid, createdByName: currentUser.displayName||currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modalContact');
+    ['contactName','contactPhone','contactEmail'].forEach(id=>document.getElementById(id).value='');
+    toast('Yhteystieto lisätty!','success');
+  } catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+window.deleteContact = async (id) => {
+  try { await deleteDoc(doc(db,'contacts',id)); toast('Yhteystieto poistettu','success'); }
+  catch(e) { toast('Virhe: ' + e.message, 'error'); }
+};
+window.toggleContacts = () => {
+  document.getElementById('contactsDrawer').classList.toggle('open');
+  document.getElementById('contactsOverlay').classList.toggle('open');
+};
+
+// ==================== PDF ====================
 window.exportPDF = async () => {
   if (!currentSite) return;
-  toast('Luodaan PDF...', 'success');
-
-  const q = query(collection(db, 'media'), where('siteId', '==', currentSite.id), orderBy('date', 'desc'));
-  const snap = await getDocs(q);
-  const allMedia = [];
-  snap.forEach(d => allMedia.push({ id: d.id, ...d.data() }));
-
-  const qr = query(collection(db, 'reports'), where('siteId', '==', currentSite.id), orderBy('date', 'desc'));
-  const snapR = await getDocs(qr);
-  const allReports = [];
-  snapR.forEach(d => allReports.push({ id: d.id, ...d.data() }));
-
-  const win = window.open('', '_blank');
-  const zonesMap = {};
-  currentZones.forEach(z => zonesMap[z.id] = z.name);
-
-  const mediaByZone = {};
-  allMedia.forEach(m => {
-    const zname = zonesMap[m.zoneId] || 'Tuntematon';
-    if (!mediaByZone[zname]) mediaByZone[zname] = [];
-    mediaByZone[zname].push(m);
-  });
-
-  const pdfDate = new Date().toLocaleDateString('fi-FI');
-  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>${currentSite.name} - Raportti</title>
-  <style>
-    body{font-family:Arial,sans-serif;color:#222;max-width:900px;margin:0 auto;padding:20px}
-    h1{font-size:28px;color:#1a1a2e;border-bottom:3px solid #f0a500;padding-bottom:10px}
-    h2{font-size:20px;color:#f0a500;margin-top:30px;border-left:4px solid #f0a500;padding-left:10px}
-    h3{font-size:16px;color:#333;margin-top:20px}
-    .meta{color:#666;font-size:13px;margin-bottom:20px}
-    .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
-    .img-grid img{width:100%;height:150px;object-fit:cover;border-radius:6px}
-    .img-cap{font-size:11px;color:#666;text-align:center;margin-top:3px}
-    .report-card{background:#f9f9f9;border-left:3px solid #f0a500;padding:12px;margin-bottom:10px;border-radius:4px}
-    .footer{margin-top:40px;border-top:1px solid #ddd;padding-top:10px;font-size:11px;color:#999}
-    @media print{body{padding:10px}}
-  </style></head><body>
+  toast('Luodaan PDF...','success');
+  const [snapM, snapR] = await Promise.all([
+    getDocs(query(collection(db,'media'),where('siteId','==',currentSite.id),orderBy('date','desc'))),
+    getDocs(query(collection(db,'reports'),where('siteId','==',currentSite.id),orderBy('date','desc')))
+  ]);
+  const allMedia=[],allReports=[];
+  snapM.forEach(d=>allMedia.push({id:d.id,...d.data()}));
+  snapR.forEach(d=>allReports.push({id:d.id,...d.data()}));
+  const zonesMap={}; currentZones.forEach(z=>zonesMap[z.id]=z.name);
+  const mediaByZone={};
+  allMedia.forEach(m=>{ const zn=zonesMap[m.zoneId]||'Tuntematon'; if(!mediaByZone[zn])mediaByZone[zn]=[]; mediaByZone[zn].push(m); });
+  const pdfDate=new Date().toLocaleDateString('fi-FI');
+  const tagLabels={ongelma:'🔴 Ongelma',korjattu:'🟢 Korjattu',tarkastus:'🔵 Tarkastus',hyvaksytty:'🟣 Hyväksytty',odottaa:'🟡 Odottaa'};
+  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${currentSite.name}</title>
+  <style>body{font-family:Arial,sans-serif;color:#222;max-width:900px;margin:0 auto;padding:20px}
+  h1{font-size:28px;color:#1a1a2e;border-bottom:3px solid #f0a500;padding-bottom:10px}
+  h2{font-size:20px;color:#f0a500;margin-top:30px;border-left:4px solid #f0a500;padding-left:10px}
+  h3{font-size:16px;color:#333;margin-top:20px}.meta{color:#666;font-size:13px;margin-bottom:20px}
+  .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+  .img-item{break-inside:avoid}.img-item img{width:100%;height:150px;object-fit:cover;border-radius:6px}
+  .img-cap{font-size:11px;color:#666;text-align:center;margin-top:3px}
+  .img-tags{font-size:10px;color:#f0a500;margin-top:2px;text-align:center}
+  .report-card{background:#f9f9f9;border-left:3px solid #f0a500;padding:12px;margin-bottom:10px;border-radius:4px}
+  .footer{margin-top:40px;border-top:1px solid #ddd;padding-top:10px;font-size:11px;color:#999}
+  @media print{body{padding:10px}}</style></head><body>
   <h1>🏗 ${currentSite.name}</h1>
-  <div class="meta">
-    ${currentSite.address ? `📍 ${currentSite.address}<br>` : ''}
-    ${currentSite.type ? `Kohdetyyppi: ${currentSite.type}<br>` : ''}
-    Raportti luotu: ${pdfDate}<br>
-    Vyöhykkeitä: ${currentZones.length} | Tiedostoja: ${allMedia.length}
-  </div>`;
-
-  // Media by zone
-  html += `<h2>📸 Media vyöhykkeittäin</h2>`;
-  for (const [zoneName, items] of Object.entries(mediaByZone)) {
-    html += `<h3>${zoneName} (${items.length} tiedostoa)</h3><div class="img-grid">`;
+  <div class="meta">${currentSite.address?`📍 ${currentSite.address}<br>`:''} ${currentSite.type?`Kohdetyyppi: ${currentSite.type}<br>`:''} Raportti luotu: ${pdfDate}<br>Vyöhykkeitä: ${currentZones.length} | Tiedostoja: ${allMedia.length}</div>`;
+  html+=`<h2>📸 Media vyöhykkeittäin</h2>`;
+  for (const [zn,items] of Object.entries(mediaByZone)) {
+    html+=`<h3>${zn} (${items.length} tiedostoa)</h3><div class="img-grid">`;
     for (const item of items) {
-      if (item.type === 'image') {
-        html += `<div><img src="${item.url}" alt=""><div class="img-cap">${item.date || ''} ${item.caption || ''}</div></div>`;
-      } else {
-        html += `<div><div style="background:#222;height:150px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#fff">🎥 Video</div><div class="img-cap">${item.date || ''} ${item.caption || ''}</div></div>`;
-      }
+      html+=`<div class="img-item">${item.type==='image'?`<img src="${item.url}" alt="">`:`<div style="background:#222;height:150px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#fff">🎥 Video</div>`}
+      <div class="img-cap">${item.date||''} ${item.caption||''}</div>
+      ${(item.tags||[]).length?`<div class="img-tags">${(item.tags||[]).map(t=>tagLabels[t]||t).join(' ')}</div>`:''}</div>`;
     }
-    html += `</div>`;
+    html+=`</div>`;
   }
-
-  // Reports
   if (allReports.length) {
-    html += `<h2>📋 Päivittäiset raportit</h2>`;
-    allReports.forEach(r => {
-      html += `<div class="report-card">
-        <strong>${r.date} ${r.weather || ''}</strong> — ${r.workers || 0} työntekijää<br>
-        <p>${r.work}</p>
-        ${r.notes ? `<p style="color:#666;font-size:13px">${r.notes}</p>` : ''}
-        <small>Kirjannut: ${r.createdByName || '-'}</small>
-      </div>`;
-    });
+    html+=`<h2>📋 Päivittäiset raportit</h2>`;
+    allReports.forEach(r=>{ html+=`<div class="report-card"><strong>${r.date} ${r.weather||''}</strong> — ${r.workers||0} työntekijää<br><p>${r.work}</p>${r.notes?`<p style="color:#666;font-size:13px">${r.notes}</p>`:''}<small>Kirjannut: ${r.createdByName||'-'}</small></div>`; });
   }
-
-  html += `<div class="footer">RakennusDoc — ${pdfDate} — ${currentUser.email}</div>
-  <script>window.onload=()=>{window.print()}<\/script>
-  </body></html>`;
-
-  win.document.write(html);
-  win.document.close();
+  html+=`<div class="footer">RakennusDoc — ${pdfDate} — ${currentUser.email}</div><script>window.onload=()=>{window.print()}<\/script></body></html>`;
+  const win=window.open('','_blank'); win.document.write(html); win.document.close();
 };
 
 // ==================== HELPERS ====================
 window.openModal = (id) => document.getElementById(id).classList.add('active');
 window.closeModal = (id) => document.getElementById(id).classList.remove('active');
-
-// Close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('active');
-  });
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if(e.target===o) o.classList.remove('active'); });
 });
-
-function toast(msg, type = '') {
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.textContent = msg;
+function toast(msg, type='') {
+  const el=document.createElement('div');
+  el.className='toast '+type; el.textContent=msg;
   document.getElementById('toastContainer').appendChild(el);
-  setTimeout(() => el.remove(), 3500);
+  setTimeout(()=>el.remove(),3500);
 }
-
-window.toast = toast;
+window.toast=toast;
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
