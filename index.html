@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RakennusDoc">
+<link rel="manifest" href="manifest.json">
+<title>RakennusDoc</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e2a;
+  --card: #1e2330;
+  --card2: #252b3b;
+  --border: #2e3650;
+  --accent: #f0a500;
+  --accent2: #e8873a;
+  --text: #e8eaf0;
+  --text2: #8b92a8;
+  --text3: #555f7a;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --blue: #3498db;
+  --radius: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--accent);letter-spacing:1px}
+.topbar-logo span{color:var(--text2);font-weight:400}
+.topbar-right{display:flex;gap:8px;align-items:center}
+
+/* BOTTOM NAV */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;color:var(--text3);font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.5px;transition:color 0.2s;gap:4px;border:none;background:none}
+.bnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bnav-item.active{color:var(--accent)}
+
+/* PAGES */
+.page{display:none;padding:16px;padding-bottom:80px;min-height:calc(100vh - 56px)}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.5px;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-icon{padding:8px;border-radius:8px;background:var(--card2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.btn-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* FORMS */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Noto Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:80px}
+select option{background:var(--bg3)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:20px}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent)}
+
+/* SECTION TITLE */
+.section-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600}
+.badge-accent{background:rgba(240,165,0,0.15);color:var(--accent);border:1px solid rgba(240,165,0,0.3)}
+.badge-green{background:rgba(46,204,113,0.15);color:var(--green);border:1px solid rgba(46,204,113,0.3)}
+
+/* TYÖMAA CARD */
+.site-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.2s,transform 0.1s}
+.site-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.site-card-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.site-card-meta{font-size:12px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap}
+
+/* ZONE CARD */
+.zone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.zone-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.2s}
+.zone-card:hover{border-color:var(--accent)}
+.zone-thumb{width:100%;height:100px;object-fit:cover;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.zone-thumb img{width:100%;height:100%;object-fit:cover}
+.zone-info{padding:10px}
+.zone-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.zone-count{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* MEDIA GRID */
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.media-item{aspect-ratio:1;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative}
+.media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
+.media-item .media-date{position:absolute;bottom:4px;left:4px;right:4px;font-size:9px;color:#fff;background:rgba(0,0,0,0.6);border-radius:3px;padding:2px 4px;text-align:center}
+.media-item .media-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3)}
+.media-item .media-play svg{width:28px;height:28px;fill:#fff;opacity:0.9}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:300;display:none;flex-direction:column}
+.lightbox.active{display:flex}
+.lightbox-header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.lightbox-body{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden}
+.lightbox-body img,.lightbox-body video{max-width:100%;max-height:100%;border-radius:8px;object-fit:contain}
+.lightbox-footer{padding:12px 16px;border-top:1px solid var(--border)}
+.lightbox-caption{font-size:14px;color:var(--text);margin-bottom:8px}
+.lightbox-meta{font-size:12px;color:var(--text2)}
+
+/* COMMENTS */
+.comment{display:flex;gap:10px;margin-bottom:12px}
+.comment-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:#000;font-size:14px;flex-shrink:0}
+.comment-body{flex:1;background:var(--bg3);border-radius:8px;padding:10px}
+.comment-author{font-size:12px;color:var(--accent);font-weight:600;font-family:'Rajdhani',sans-serif}
+.comment-text{font-size:13px;color:var(--text);margin-top:4px}
+.comment-time{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* RAPORTTI */
+.report-day{border-left:3px solid var(--accent);padding-left:14px;margin-bottom:20px}
+.report-day-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.report-entry{background:var(--card);border-radius:8px;padding:12px;margin-bottom:8px}
+
+/* MAP */
+#mapContainer{border-radius:var(--radius);overflow:hidden;height:400px;border:1px solid var(--border)}
+.map-site-list{margin-top:14px}
+
+/* UPLOAD AREA */
+.upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s}
+.upload-area:hover,.upload-area.drag{border-color:var(--accent);background:rgba(240,165,0,0.05)}
+.upload-area p{color:var(--text2);font-size:14px;margin-top:8px}
+.upload-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.upload-preview-item{aspect-ratio:1;border-radius:6px;overflow:hidden;position:relative;background:var(--bg3)}
+.upload-preview-item img,.upload-preview-item video{width:100%;height:100%;object-fit:cover}
+.upload-preview-item .remove-preview{position:absolute;top:4px;right:4px;background:rgba(231,76,60,0.9);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;border:none}
+
+/* PROGRESS BAR */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
+
+/* TOAST */
+.toast-container{position:fixed;top:70px;right:16px;z-index:400;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);box-shadow:var(--shadow);animation:slideIn 0.3s ease;display:flex;align-items:center;gap:8px;max-width:280px}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--red);color:var(--red)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text3)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* LOGIN */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px}
+.login-logo{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--accent);text-align:center;margin-bottom:4px}
+.login-sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:28px}
+.login-tabs{display:flex;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:20px}
+.login-tab{flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;color:var(--text2);transition:all 0.2s;border:none;background:none}
+.login-tab.active{background:var(--accent);color:#000}
+
+/* CAMERA */
+.camera-view{position:fixed;inset:0;background:#000;z-index:300;display:none;flex-direction:column}
+.camera-view.active{display:flex}
+.camera-preview{flex:1;object-fit:cover;width:100%}
+.camera-controls{padding:20px;display:flex;align-items:center;justify-content:space-around;background:rgba(0,0,0,0.8)}
+.camera-shutter{width:64px;height:64px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,0.3);cursor:pointer;transition:transform 0.1s}
+.camera-shutter:active{transform:scale(0.9)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty svg{width:48px;height:48px;stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:12px;opacity:0.4}
+.empty h3{font-family:'Rajdhani',sans-serif;font-size:18px;color:var(--text2);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* TAG */
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);margin:2px}
+
+/* FLOATING ACTION BUTTON */
+.fab{position:fixed;bottom:76px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(240,165,0,0.4);z-index:90;transition:transform 0.2s}
+.fab:hover{transform:scale(1.05)}
+.fab svg{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.hidden{display:none!important}
+.flex{display:flex}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.gap-8{gap:8px}
+.mt-8{margin-top:8px}
+.mt-16{margin-top:16px}
+.text-sm{font-size:13px}
+.text-xs{font-size:11px}
+.text-muted{color:var(--text2)}
+.text-accent{color:var(--accent)}
+.font-bold{font-weight:700}
+.w-full{width:100%}
+
+/* NAME INPUT for login */
+.name-display{font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--text2);padding:4px 8px;background:var(--card2);border-radius:6px;border:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-page">
+  <div class="login-box">
+    <div class="login-logo">🏗 RakennusDoc</div>
+    <div class="login-sub">Rakennustyömaan dokumentointijärjestelmä</div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('login')">Kirjaudu</button>
+      <button class="login-tab" onclick="switchLoginTab('register')">Luo tili</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Sähköposti</label>
+        <input type="email" id="loginEmail" placeholder="nimi@yritys.fi">
+      </div>
+      <div class="form-group">
+        <label>Salasana</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary w-full" onclick="doLogin()" style="justify-content:center">Kirjaudu sisään</button>
+    </div>
+    <div id="registerForm" class="hidden">
+      <div class="form-group">
+        <label>Nimi</label>
+        <input type="text" id="regName" placeholder="Etunimi Sukunimi">
+      </div>
+      <div class="form-group">
+        <label>Sähköposti</label>
+        <input type="email" id="regEmail" placeholder="nimi@yritys.fi">
+      </div>
+      <div class="form-group">
+        <label>Salasana</label>
+        <input type="password" id="regPassword" placeholder="vähintään 6 merkkiä">
+      </div>
+      <button class="btn btn-primary w-full" onclick="doRegister()" style="justify-content:center">Luo tili</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hidden">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">🏗 Rakennus<span>Doc</span></div>
+  <div class="topbar-right">
+    <span class="name-display" id="userNameDisplay">-</span>
+    <button class="btn-icon" onclick="doLogout()" title="Kirjaudu ulos">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PAGES -->
+
+<!-- TYÖMAAT -->
+<div id="pageTyomaat" class="page active">
+  <div class="section-title">Työmaat</div>
+  <div id="tyomaaList"><div class="loader"><div class="spinner"></div>Ladataan...</div></div>
+</div>
+
+<!-- TYÖMAA DETAIL -->
+<div id="pageDetail" class="page">
+  <div id="detailContent"></div>
+</div>
+
+<!-- KARTTA -->
+<div id="pageKartta" class="page">
+  <div class="section-title">Karttanäkymä</div>
+  <div id="mapContainer"></div>
+  <div class="map-site-list" id="mapSiteList"></div>
+</div>
+
+<!-- RAPORTIT -->
+<div id="pageRaportit" class="page">
+  <div class="section-title">Päivittäiset raportit</div>
+  <div class="form-group">
+    <label>Valitse työmaa</label>
+    <select id="reportSiteSelect" onchange="loadReport()">
+      <option value="">-- Valitse työmaa --</option>
+    </select>
+  </div>
+  <div id="reportContent"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottomnav">
+  <button class="bnav-item active" onclick="showPage('Tyomaat',this)">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    Työmaat
+  </button>
+  <button class="bnav-item" onclick="showPage('Kartta',this)">
+    <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    Kartta
+  </button>
+  <button class="bnav-item" onclick="showPage('Raportit',this)">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Raportit
+  </button>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="openFab()">
+  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+</div><!-- end mainApp -->
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MODAL: Uusi työmaa -->
+<div class="modal-overlay" id="modalTyomaa">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Uusi työmaa</div>
+    <div class="form-group">
+      <label>Työmaan nimi *</label>
+      <input type="text" id="siteName" placeholder="esim. Koivulan omakotitalo">
+    </div>
+    <div class="form-group">
+      <label>Osoite</label>
+      <input type="text" id="siteAddress" placeholder="Katuosoite, kaupunki">
+    </div>
+    <div class="form-group">
+      <label>Kohdetyyppi</label>
+      <select id="siteType">
+        <option>Omakotitalo</option>
+        <option>Rivitalo</option>
+        <option>Kerrostalo</option>
+        <option>Teollisuus</option>
+        <option>Infrarakentaminen</option>
+        <option>Muu</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Lisätiedot</label>
+      <textarea id="siteNotes" placeholder="Muistiinpanoja..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalTyomaa')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveTyomaa()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Uusi vyöhyke -->
+<div class="modal-overlay" id="modalZone">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Lisää vyöhyke</div>
+    <div class="form-group">
+      <label>Vyöhyketyyppi *</label>
+      <select id="zoneType">
+        <optgroup label="Maanrakennus & putkistot">
+          <option>Salaoja</option><option>Vesiputki</option><option>Jätevesi</option>
+          <option>Poistovesi</option><option>Sadevesiviemäri</option><option>Hulevesiallas</option>
+          <option>Kunnallistekniikka</option><option>Kaivanto</option><option>Täyttömaa / Routasuoja</option>
+          <option>Maanvarainen laatta</option><option>Paalutus</option><option>Tukimuuri</option>
+          <option>Pintavesirakenne</option><option>Eroosiosuojaus</option><option>Massanvaihto</option>
+          <option>Stabilointi</option><option>Kallioleikkaus</option><option>Louhinta</option>
+          <option>Murskaus</option><option>Geotekniikka</option>
+        </optgroup>
+        <optgroup label="Perustukset">
+          <option>Anturaperustus</option><option>Laattaperustus</option><option>Paaluhattu</option>
+          <option>Sokkelit</option><option>Alapohja</option>
+        </optgroup>
+        <optgroup label="Rakenne & runko">
+          <option>Runko</option><option>Väliseinät</option><option>Yläpohja</option>
+          <option>Vesikatto</option><option>Ulkoverhous</option><option>Ikkuna-asennukset</option>
+          <option>Oviasennukset</option><option>Teräsrakenteet</option>
+        </optgroup>
+        <optgroup label="Sisätyöt">
+          <option>Tasoitetyöt</option><option>Maalaus</option><option>Lattiat</option>
+          <option>Katto</option><option>Keittiö</option><option>Kylpyhuone</option>
+          <option>Sauna</option><option>Portaat</option>
+        </optgroup>
+        <optgroup label="Talotekniikka">
+          <option>Sähkötyöt</option><option>LVI</option><option>Maalämpö</option>
+          <option>Ilmanvaihto</option><option>Aurinkopaneelit</option><option>Lattialämmitys</option>
+          <option>Sprinkleri</option><option>Automaatio</option>
+        </optgroup>
+        <optgroup label="Piha & ympäristö">
+          <option>Piha-alue</option><option>Asfaltointi</option><option>Kiveys</option>
+          <option>Aidat</option><option>Istutukset</option><option>Valaistus ulko</option>
+          <option>Leikkipaikka</option><option>Varasto / Autotalli</option>
+        </optgroup>
+        <optgroup label="Muu">
+          <option>Yleiskuva</option><option>Muu</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Oma nimi (valinnainen)</label>
+      <input type="text" id="zoneName" placeholder="esim. Pohjoinen nurkkaus">
+    </div>
+    <div class="form-group">
+      <label>Muistiinpanot</label>
+      <textarea id="zoneNotes" placeholder="Lisätiedot..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalZone')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveZone()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Lisää media -->
+<div class="modal-overlay" id="modalMedia">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Lisää media</div>
+    <div class="form-group">
+      <label>Vyöhyke *</label>
+      <select id="mediaZone"></select>
+    </div>
+    <div class="form-group">
+      <label>Kuvauspäivä</label>
+      <input type="date" id="mediaDate">
+    </div>
+    <div class="form-group">
+      <label>Kuvaus</label>
+      <input type="text" id="mediaCaption" placeholder="Mitä kuvassa näkyy?">
+    </div>
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Napauta ladataksesi tai raahaa tiedostoja</p>
+      <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG, MP4, MOV</p>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*,video/*" class="hidden">
+    <div style="margin-top:10px;text-align:center">
+      <button class="btn btn-secondary btn-sm" onclick="openCamera()">📷 Ota kuva kameralla</button>
+    </div>
+    <div class="upload-preview" id="uploadPreview"></div>
+    <div id="uploadProgress" class="hidden">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <p style="text-align:center;font-size:12px;color:var(--text2);margin-top:6px" id="progressText">Ladataan...</p>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalMedia')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="uploadMedia()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Työraportti -->
+<div class="modal-overlay" id="modalReport">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Lisää työraportti</div>
+    <div class="form-group">
+      <label>Työmaa</label>
+      <select id="reportSite"></select>
+    </div>
+    <div class="form-group">
+      <label>Päivämäärä</label>
+      <input type="date" id="reportDate">
+    </div>
+    <div class="form-group">
+      <label>Mitä tehtiin tänään</label>
+      <textarea id="reportWork" placeholder="Kuvaile päivän työt..." style="min-height:100px"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Työtekijöiden määrä</label>
+      <input type="number" id="reportWorkers" placeholder="0" min="0">
+    </div>
+    <div class="form-group">
+      <label>Sää</label>
+      <select id="reportWeather">
+        <option>☀️ Aurinkoinen</option><option>⛅ Puolipilvinen</option>
+        <option>🌧 Sateinen</option><option>❄️ Lumisade</option><option>💨 Tuulinen</option><option>🌫 Sumuinen</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Lisähuomiot</label>
+      <textarea id="reportNotes" placeholder="Ongelmat, huomiot, seuraavan päivän suunnitelmat..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modalReport')">Peruuta</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveReport()">Tallenna</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-header">
+    <button class="btn-icon" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <span id="lbZone" class="badge badge-accent"></span>
+    <button class="btn-icon" onclick="deleteMedia()" title="Poista">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    </button>
+  </div>
+  <div class="lightbox-body" id="lbBody"></div>
+  <div class="lightbox-footer">
+    <div class="lightbox-caption" id="lbCaption"></div>
+    <div class="lightbox-meta" id="lbMeta"></div>
+    <div class="divider"></div>
+    <div id="lbComments"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <input type="text" id="lbCommentInput" placeholder="Kirjoita kommentti..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none">
+      <button class="btn btn-primary btn-sm" onclick="addComment()">Lähetä</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMERA VIEW -->
+<div class="camera-view" id="cameraView">
+  <video id="cameraPreview" class="camera-preview" autoplay playsinline muted></video>
+  <div class="camera-controls">
+    <button class="btn-icon" onclick="closeCamera()" style="width:48px;height:48px">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="camera-shutter" onclick="takePhoto()"></button>
+    <button class="btn-icon" onclick="switchCamera()" style="width:48px;height:48px">
+      <svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 .49-4.45"/></svg>
+    </button>
+  </div>
+  <canvas id="cameraCanvas" class="hidden"></canvas>
+</div>
+
+<!-- FIREBASE + APP SCRIPTS -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, onSnapshot, query, orderBy, where, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyChXZJKbreDwkPhXUFwgiYwh5EcQb5kDTU",
+  authDomain: "rakennusdoc.firebaseapp.com",
+  projectId: "rakennusdoc",
+  storageBucket: "rakennusdoc.firebasestorage.app",
+  messagingSenderId: "537521199862",
+  appId: "1:537521199862:web:5541c58326f32da2282ad7"
+};
+
+const CLOUD_NAME = "dicmfqyhr";
+const UPLOAD_PRESET = "rakennusdoc";
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
+
+// STATE
+let currentUser = null;
+let currentSite = null;
+let currentSites = [];
+let currentZones = [];
+let currentMediaItems = [];
+let lightboxMedia = null;
+let cameraStream = null;
+let facingMode = "environment";
+let pendingFiles = [];
+let leafletMap = null;
+let markers = [];
+
+// ==================== AUTH ====================
+window.switchLoginTab = (tab) => {
+  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+};
+
+window.doLogin = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  if (!email || !pass) return toast('Täytä kaikki kentät', 'error');
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    toast('Kirjautuminen epäonnistui: ' + e.message, 'error');
+  }
+};
+
+window.doRegister = async () => {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value;
+  if (!name || !email || !pass) return toast('Täytä kaikki kentät', 'error');
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+    toast('Tili luotu! Tervetuloa, ' + name, 'success');
+  } catch(e) {
+    toast('Rekisteröinti epäonnistui: ' + e.message, 'error');
+  }
+};
+
+window.doLogout = async () => {
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if (user) {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    document.getElementById('userNameDisplay').textContent = user.displayName || user.email.split('@')[0];
+    initApp();
+  } else {
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
+  }
+});
+
+// ==================== INIT ====================
+function initApp() {
+  loadTyomaat();
+  setDefaultDates();
+}
+
+function setDefaultDates() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('mediaDate').value = today;
+  document.getElementById('reportDate').value = today;
+}
+
+// ==================== NAVIGATION ====================
+window.showPage = (name, el) => {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + name).classList.add('active');
+  if (el) el.classList.add('active');
+
+  if (name === 'Kartta') initMap();
+  if (name === 'Raportit') loadReportSites();
+  if (name === 'Tyomaat') { currentSite = null; loadTyomaat(); updateFab(); }
+  updateFab();
+};
+
+window.openFab = () => {
+  const activePage = document.querySelector('.page.active').id;
+  if (activePage === 'pageTyomaat') openModal('modalTyomaa');
+  else if (activePage === 'pageDetail') openMediaModal();
+  else if (activePage === 'pageRaportit') openReportModal();
+};
+
+function updateFab() {
+  const activePage = document.querySelector('.page.active').id;
+  const fabBtn = document.getElementById('fabBtn');
+  if (activePage === 'pageKartta') {
+    fabBtn.classList.add('hidden');
+  } else {
+    fabBtn.classList.remove('hidden');
+  }
+}
+
+// ==================== TYÖMAAT ====================
+function loadTyomaat() {
+  const list = document.getElementById('tyomaaList');
+  list.innerHTML = '<div class="loader"><div class="spinner"></div>Ladataan...</div>';
+
+  const q = query(collection(db, 'sites'), orderBy('createdAt', 'desc'));
+  onSnapshot(q, snap => {
+    currentSites = [];
+    snap.forEach(d => currentSites.push({ id: d.id, ...d.data() }));
+    renderTyomaaList();
+    updateReportSelects();
+  });
+}
+
+function renderTyomaaList() {
+  const list = document.getElementById('tyomaaList');
+  if (!currentSites.length) {
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/><path d="M8 7V5a2 2 0 0 1 4 0v2"/></svg><h3>Ei työmaita vielä</h3><p>Luo ensimmäinen työmaa + painikkeella</p></div>`;
+    return;
+  }
+  list.innerHTML = currentSites.map(s => `
+    <div class="site-card" onclick="openSite('${s.id}')">
+      <div class="flex-between">
+        <div class="site-card-name">${s.name}</div>
+        <span class="badge badge-accent">${s.type || 'Kohde'}</span>
+      </div>
+      <div class="site-card-meta">
+        ${s.address ? `<span>📍 ${s.address}</span>` : ''}
+        <span>📅 ${s.createdAt ? new Date(s.createdAt.seconds*1000).toLocaleDateString('fi-FI') : '-'}</span>
+      </div>
+      ${s.notes ? `<p style="font-size:12px;color:var(--text2);margin-top:8px">${s.notes}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+window.saveTyomaa = async () => {
+  const name = document.getElementById('siteName').value.trim();
+  if (!name) return toast('Anna työmaan nimi', 'error');
+  try {
+    await addDoc(collection(db, 'sites'), {
+      name,
+      address: document.getElementById('siteAddress').value.trim(),
+      type: document.getElementById('siteType').value,
+      notes: document.getElementById('siteNotes').value.trim(),
+      createdBy: currentUser.uid,
+      createdByName: currentUser.displayName || currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modalTyomaa');
+    document.getElementById('siteName').value = '';
+    document.getElementById('siteAddress').value = '';
+    document.getElementById('siteNotes').value = '';
+    toast('Työmaa lisätty!', 'success');
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
+};
+
+// ==================== SITE DETAIL ====================
+window.openSite = async (siteId) => {
+  currentSite = currentSites.find(s => s.id === siteId);
+  if (!currentSite) return;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('pageDetail').classList.add('active');
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  updateFab();
+
+  renderDetailPage();
+  loadZones(siteId);
+};
+
+function renderDetailPage() {
+  document.getElementById('detailContent').innerHTML = `
+    <div class="flex-between" style="margin-bottom:16px">
+      <button class="btn btn-secondary btn-sm" onclick="goBack()">← Takaisin</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="openModal('modalZone')">+ Vyöhyke</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportPDF()">📄 PDF</button>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <h2 style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700">${currentSite.name}</h2>
+      ${currentSite.address ? `<p style="color:var(--text2);font-size:13px">📍 ${currentSite.address}</p>` : ''}
+      ${currentSite.notes ? `<p style="color:var(--text2);font-size:13px;margin-top:4px">${currentSite.notes}</p>` : ''}
+    </div>
+    <div class="section-title">Vyöhykkeet</div>
+    <div id="zoneGrid" class="zone-grid"><div class="loader"><div class="spinner"></div></div></div>
+    <div class="section-title" style="margin-top:20px">Kaikki media</div>
+    <div id="allMediaGrid" class="media-grid"></div>
+  `;
+}
+
+window.goBack = () => {
+  currentSite = null;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('pageTyomaat').classList.add('active');
+  document.querySelectorAll('.bnav-item')[0].classList.add('active');
+  updateFab();
+};
+
+// ==================== ZONES ====================
+function loadZones(siteId) {
+  const q = query(collection(db, 'zones'), where('siteId', '==', siteId), orderBy('createdAt', 'asc'));
+  onSnapshot(q, snap => {
+    currentZones = [];
+    snap.forEach(d => currentZones.push({ id: d.id, ...d.data() }));
+    renderZones();
+    loadAllMedia(siteId);
+    updateMediaZoneSelect();
+  });
+}
+
+function renderZones() {
+  const grid = document.getElementById('zoneGrid');
+  if (!grid) return;
+  if (!currentZones.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:span 2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg><h3>Ei vyöhykkeitä</h3><p>Lisää vyöhyke + painikkeella</p></div>`;
+    return;
+  }
+  grid.innerHTML = currentZones.map(z => `
+    <div class="zone-card" onclick="openZone('${z.id}')">
+      <div class="zone-thumb" id="zthumb_${z.id}">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div class="zone-info">
+        <div class="zone-name">${z.name || z.type}</div>
+        <div class="zone-count text-muted" id="zcount_${z.id}">0 tiedostoa</div>
+      </div>
+    </div>
+  `).join('');
+  // Load media counts for each zone
+  currentZones.forEach(z => loadZoneThumb(z));
+}
+
+async function loadZoneThumb(zone) {
+  const q = query(collection(db, 'media'), where('zoneId', '==', zone.id), orderBy('date', 'desc'));
+  onSnapshot(q, snap => {
+    const items = [];
+    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+    const countEl = document.getElementById('zcount_' + zone.id);
+    const thumbEl = document.getElementById('zthumb_' + zone.id);
+    if (countEl) countEl.textContent = items.length + ' tiedostoa';
+    if (thumbEl && items.length > 0) {
+      const first = items[0];
+      if (first.type === 'video') {
+        thumbEl.innerHTML = `<video src="${first.url}" style="width:100%;height:100%;object-fit:cover" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`;
+      } else {
+        thumbEl.innerHTML = `<img src="${first.url}" alt="" style="width:100%;height:100%;object-fit:cover">`;
+      }
+    }
+  });
+}
+
+window.saveZone = async () => {
+  if (!currentSite) return;
+  const type = document.getElementById('zoneType').value;
+  const name = document.getElementById('zoneName').value.trim();
+  try {
+    await addDoc(collection(db, 'zones'), {
+      siteId: currentSite.id,
+      type,
+      name: name || type,
+      notes: document.getElementById('zoneNotes').value.trim(),
+      createdBy: currentUser.uid,
+      createdByName: currentUser.displayName || currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modalZone');
+    document.getElementById('zoneName').value = '';
+    document.getElementById('zoneNotes').value = '';
+    toast('Vyöhyke lisätty!', 'success');
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
+};
+
+// Zone detail view
+window.openZone = (zoneId) => {
+  const zone = currentZones.find(z => z.id === zoneId);
+  if (!zone) return;
+  const q = query(collection(db, 'media'), where('zoneId', '==', zoneId), orderBy('date', 'desc'));
+  onSnapshot(q, snap => {
+    const items = [];
+    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+    currentMediaItems = items;
+    showZoneDetail(zone, items);
+  });
+};
+
+function showZoneDetail(zone, items) {
+  document.getElementById('detailContent').innerHTML = `
+    <div class="flex-between" style="margin-bottom:16px">
+      <button class="btn btn-secondary btn-sm" onclick="renderDetailPage();loadZones('${currentSite.id}')">← Vyöhykkeet</button>
+      <span class="badge badge-accent">${zone.type}</span>
+    </div>
+    <h2 style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px">${zone.name}</h2>
+    ${zone.notes ? `<p style="color:var(--text2);font-size:13px;margin-bottom:14px">${zone.notes}</p>` : ''}
+    <div class="section-title">Media (${items.length})</div>
+    <div class="media-grid">${items.length ? items.map((m,i) => `
+      <div class="media-item" onclick="openLightbox(${i})">
+        ${m.type === 'video'
+          ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`
+          : `<img src="${m.url}" alt="" loading="lazy">`}
+        <div class="media-date">${m.date || ''}</div>
+      </div>`).join('')
+      : `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`}
+    </div>
+  `;
+}
+
+// ==================== ALL MEDIA ====================
+function loadAllMedia(siteId) {
+  const q = query(collection(db, 'media'), where('siteId', '==', siteId), orderBy('date', 'desc'));
+  onSnapshot(q, snap => {
+    const items = [];
+    snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+    const grid = document.getElementById('allMediaGrid');
+    if (!grid) return;
+    currentMediaItems = items;
+    if (!items.length) {
+      grid.innerHTML = `<div class="empty" style="grid-column:span 3"><p>Ei mediaa vielä</p></div>`;
+      return;
+    }
+    grid.innerHTML = items.map((m,i) => `
+      <div class="media-item" onclick="openLightbox(${i})">
+        ${m.type === 'video'
+          ? `<video src="${m.url}" muted></video><div class="media-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div>`
+          : `<img src="${m.url}" alt="" loading="lazy">`}
+        <div class="media-date">${m.date || ''}</div>
+      </div>`).join('');
+  });
+}
+
+// ==================== UPLOAD ====================
+function openMediaModal() {
+  updateMediaZoneSelect();
+  document.getElementById('uploadPreview').innerHTML = '';
+  pendingFiles = [];
+  document.getElementById('uploadProgress').classList.add('hidden');
+  openModal('modalMedia');
+}
+
+function updateMediaZoneSelect() {
+  const sel = document.getElementById('mediaZone');
+  sel.innerHTML = currentZones.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
+}
+
+// File input
+document.getElementById('fileInput').addEventListener('change', e => {
+  handleFiles(Array.from(e.target.files));
+});
+
+// Drag & drop
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag');
+  handleFiles(Array.from(e.dataTransfer.files));
+});
+
+function handleFiles(files) {
+  files.forEach(file => {
+    if (!file.type.match(/image.*|video.*/)) return;
+    pendingFiles.push(file);
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const preview = document.getElementById('uploadPreview');
+      const div = document.createElement('div');
+      div.className = 'upload-preview-item';
+      const idx = pendingFiles.length - 1;
+      if (file.type.startsWith('video')) {
+        div.innerHTML = `<video src="${ev.target.result}" muted style="width:100%;height:100%;object-fit:cover"></video>`;
+      } else {
+        div.innerHTML = `<img src="${ev.target.result}" alt="">`;
+      }
+      div.innerHTML += `<button class="remove-preview" onclick="removePreview(${idx},this.parentElement)">×</button>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+window.removePreview = (idx, el) => {
+  pendingFiles[idx] = null;
+  el.remove();
+};
+
+window.uploadMedia = async () => {
+  const files = pendingFiles.filter(Boolean);
+  if (!files.length) return toast('Valitse ensin tiedostoja', 'error');
+  const zoneId = document.getElementById('mediaZone').value;
+  if (!zoneId) return toast('Valitse vyöhyke', 'error');
+
+  document.getElementById('uploadProgress').classList.remove('hidden');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+
+  let uploaded = 0;
+  for (const file of files) {
+    try {
+      progressText.textContent = `Ladataan ${uploaded + 1}/${files.length}...`;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+      formData.append('cloud_name', CLOUD_NAME);
+      const isVideo = file.type.startsWith('video');
+      const endpoint = isVideo
+        ? `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`
+        : `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+      const res = await fetch(endpoint, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!data.secure_url) throw new Error('Upload failed');
+
+      await addDoc(collection(db, 'media'), {
+        siteId: currentSite.id,
+        zoneId,
+        url: data.secure_url,
+        publicId: data.public_id,
+        type: isVideo ? 'video' : 'image',
+        caption: document.getElementById('mediaCaption').value.trim(),
+        date: document.getElementById('mediaDate').value,
+        uploadedBy: currentUser.uid,
+        uploadedByName: currentUser.displayName || currentUser.email,
+        comments: [],
+        createdAt: serverTimestamp()
+      });
+      uploaded++;
+      progressFill.style.width = (uploaded / files.length * 100) + '%';
+    } catch(e) {
+      toast('Virhe tiedostossa: ' + e.message, 'error');
+    }
+  }
+  closeModal('modalMedia');
+  pendingFiles = [];
+  document.getElementById('uploadPreview').innerHTML = '';
+  document.getElementById('mediaCaption').value = '';
+  toast(uploaded + ' tiedostoa ladattu!', 'success');
+};
+
+// ==================== CAMERA ====================
+window.openCamera = async () => {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode }, audio: false });
+    document.getElementById('cameraPreview').srcObject = cameraStream;
+    document.getElementById('cameraView').classList.add('active');
+  } catch(e) {
+    toast('Kamera ei saatavilla: ' + e.message, 'error');
+  }
+};
+
+window.closeCamera = () => {
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  document.getElementById('cameraView').classList.remove('active');
+};
+
+window.switchCamera = async () => {
+  facingMode = facingMode === 'environment' ? 'user' : 'environment';
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); }
+  cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode }, audio: false });
+  document.getElementById('cameraPreview').srcObject = cameraStream;
+};
+
+window.takePhoto = () => {
+  const video = document.getElementById('cameraPreview');
+  const canvas = document.getElementById('cameraCanvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  canvas.toBlob(blob => {
+    const file = new File([blob], 'kuva_' + Date.now() + '.jpg', { type: 'image/jpeg' });
+    handleFiles([file]);
+    closeCamera();
+    toast('Kuva lisätty!', 'success');
+  }, 'image/jpeg', 0.9);
+};
+
+// ==================== LIGHTBOX ====================
+window.openLightbox = (idx) => {
+  lightboxMedia = currentMediaItems[idx];
+  if (!lightboxMedia) return;
+  const lb = document.getElementById('lightbox');
+  lb.classList.add('active');
+  const zone = currentZones.find(z => z.id === lightboxMedia.zoneId);
+  document.getElementById('lbZone').textContent = zone ? zone.name : '';
+  const body = document.getElementById('lbBody');
+  if (lightboxMedia.type === 'video') {
+    body.innerHTML = `<video src="${lightboxMedia.url}" controls style="max-width:100%;max-height:60vh;border-radius:8px"></video>`;
+  } else {
+    body.innerHTML = `<img src="${lightboxMedia.url}" alt="" style="max-width:100%;max-height:60vh;border-radius:8px">`;
+  }
+  document.getElementById('lbCaption').textContent = lightboxMedia.caption || '';
+  document.getElementById('lbMeta').textContent = `${lightboxMedia.date || ''} • ${lightboxMedia.uploadedByName || ''}`;
+  renderComments(lightboxMedia.comments || []);
+};
+
+window.closeLightbox = () => {
+  document.getElementById('lightbox').classList.remove('active');
+  lightboxMedia = null;
+};
+
+window.deleteMedia = async () => {
+  if (!lightboxMedia) return;
+  if (!confirm('Poistetaanko tämä tiedosto?')) return;
+  try {
+    await deleteDoc(doc(db, 'media', lightboxMedia.id));
+    closeLightbox();
+    toast('Poistettu', 'success');
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
+};
+
+function renderComments(comments) {
+  const el = document.getElementById('lbComments');
+  if (!comments.length) { el.innerHTML = '<p style="font-size:12px;color:var(--text3);margin-bottom:8px">Ei kommentteja</p>'; return; }
+  el.innerHTML = comments.map(c => `
+    <div class="comment">
+      <div class="comment-avatar">${(c.author||'?')[0].toUpperCase()}</div>
+      <div class="comment-body">
+        <div class="comment-author">${c.author || 'Tuntematon'}</div>
+        <div class="comment-text">${c.text}</div>
+        <div class="comment-time">${c.time ? new Date(c.time).toLocaleString('fi-FI') : ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+window.addComment = async () => {
+  const input = document.getElementById('lbCommentInput');
+  const text = input.value.trim();
+  if (!text || !lightboxMedia) return;
+  const comment = {
+    text,
+    author: currentUser.displayName || currentUser.email,
+    uid: currentUser.uid,
+    time: Date.now()
+  };
+  try {
+    await updateDoc(doc(db, 'media', lightboxMedia.id), {
+      comments: arrayUnion(comment)
+    });
+    lightboxMedia.comments = [...(lightboxMedia.comments || []), comment];
+    renderComments(lightboxMedia.comments);
+    input.value = '';
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
+};
+
+// ==================== MAP ====================
+function initMap() {
+  if (leafletMap) {
+    leafletMap.invalidateSize();
+    updateMapMarkers();
+    return;
+  }
+  leafletMap = L.map('mapContainer').setView([64.5, 26.0], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(leafletMap);
+  updateMapMarkers();
+}
+
+async function updateMapMarkers() {
+  if (!leafletMap) return;
+  markers.forEach(m => m.remove());
+  markers = [];
+  const mapList = document.getElementById('mapSiteList');
+  mapList.innerHTML = '';
+
+  for (const site of currentSites) {
+    if (!site.address) continue;
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(site.address)}`);
+      const data = await res.json();
+      if (data && data[0]) {
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+        const marker = L.marker([lat, lng]).addTo(leafletMap);
+        marker.bindPopup(`<b>${site.name}</b><br>${site.address}`);
+        markers.push(marker);
+        mapList.innerHTML += `
+          <div class="card" style="margin-bottom:8px;cursor:pointer" onclick="flyToSite(${lat},${lng},'${site.name}')">
+            <div class="flex-between">
+              <span style="font-family:'Rajdhani',sans-serif;font-weight:700">${site.name}</span>
+              <span style="font-size:12px;color:var(--text2)">📍 ${site.address}</span>
+            </div>
+          </div>`;
+      }
+    } catch(e) {}
+  }
+}
+
+window.flyToSite = (lat, lng, name) => {
+  if (leafletMap) {
+    leafletMap.flyTo([lat, lng], 15);
+    markers.forEach(m => { if (m.getLatLng().lat === lat) m.openPopup(); });
+  }
+};
+
+// ==================== REPORTS ====================
+function loadReportSites() {
+  updateReportSelects();
+}
+
+function updateReportSelects() {
+  const sel1 = document.getElementById('reportSiteSelect');
+  const sel2 = document.getElementById('reportSite');
+  const opts = currentSites.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  if (sel1) sel1.innerHTML = '<option value="">-- Valitse työmaa --</option>' + opts;
+  if (sel2) sel2.innerHTML = opts;
+}
+
+window.loadReport = async () => {
+  const siteId = document.getElementById('reportSiteSelect').value;
+  const content = document.getElementById('reportContent');
+  if (!siteId) { content.innerHTML = ''; return; }
+  content.innerHTML = '<div class="loader"><div class="spinner"></div>Ladataan...</div>';
+  const q = query(collection(db, 'reports'), where('siteId', '==', siteId), orderBy('date', 'desc'));
+  onSnapshot(q, snap => {
+    const reports = [];
+    snap.forEach(d => reports.push({ id: d.id, ...d.data() }));
+    if (!reports.length) {
+      content.innerHTML = `<div class="empty"><h3>Ei raportteja</h3><p>Lisää ensimmäinen raportti + painikkeella</p></div>`;
+      return;
+    }
+    content.innerHTML = reports.map(r => `
+      <div class="report-day">
+        <div class="report-day-title">${r.date} ${r.weather || ''}</div>
+        <div class="report-entry">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:6px">Päivän työt</div>
+          <p style="font-size:13px;color:var(--text2)">${r.work || '-'}</p>
+          ${r.workers ? `<p style="font-size:12px;color:var(--text3);margin-top:6px">👷 ${r.workers} työntekijää</p>` : ''}
+          ${r.notes ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)">${r.notes}</div>` : ''}
+          <p style="font-size:11px;color:var(--text3);margin-top:8px">Kirjannut: ${r.createdByName || '-'}</p>
+        </div>
+      </div>`).join('');
+  });
+};
+
+function openReportModal() {
+  updateReportSelects();
+  openModal('modalReport');
+}
+
+window.saveReport = async () => {
+  const siteId = document.getElementById('reportSite').value;
+  const date = document.getElementById('reportDate').value;
+  const work = document.getElementById('reportWork').value.trim();
+  if (!siteId || !date || !work) return toast('Täytä pakolliset kentät', 'error');
+  try {
+    await addDoc(collection(db, 'reports'), {
+      siteId,
+      date,
+      work,
+      workers: document.getElementById('reportWorkers').value || 0,
+      weather: document.getElementById('reportWeather').value,
+      notes: document.getElementById('reportNotes').value.trim(),
+      createdBy: currentUser.uid,
+      createdByName: currentUser.displayName || currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modalReport');
+    document.getElementById('reportWork').value = '';
+    document.getElementById('reportNotes').value = '';
+    toast('Raportti tallennettu!', 'success');
+  } catch(e) {
+    toast('Virhe: ' + e.message, 'error');
+  }
+};
+
+// ==================== PDF EXPORT ====================
+window.exportPDF = async () => {
+  if (!currentSite) return;
+  toast('Luodaan PDF...', 'success');
+
+  const q = query(collection(db, 'media'), where('siteId', '==', currentSite.id), orderBy('date', 'desc'));
+  const snap = await getDocs(q);
+  const allMedia = [];
+  snap.forEach(d => allMedia.push({ id: d.id, ...d.data() }));
+
+  const qr = query(collection(db, 'reports'), where('siteId', '==', currentSite.id), orderBy('date', 'desc'));
+  const snapR = await getDocs(qr);
+  const allReports = [];
+  snapR.forEach(d => allReports.push({ id: d.id, ...d.data() }));
+
+  const win = window.open('', '_blank');
+  const zonesMap = {};
+  currentZones.forEach(z => zonesMap[z.id] = z.name);
+
+  const mediaByZone = {};
+  allMedia.forEach(m => {
+    const zname = zonesMap[m.zoneId] || 'Tuntematon';
+    if (!mediaByZone[zname]) mediaByZone[zname] = [];
+    mediaByZone[zname].push(m);
+  });
+
+  const pdfDate = new Date().toLocaleDateString('fi-FI');
+  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>${currentSite.name} - Raportti</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#222;max-width:900px;margin:0 auto;padding:20px}
+    h1{font-size:28px;color:#1a1a2e;border-bottom:3px solid #f0a500;padding-bottom:10px}
+    h2{font-size:20px;color:#f0a500;margin-top:30px;border-left:4px solid #f0a500;padding-left:10px}
+    h3{font-size:16px;color:#333;margin-top:20px}
+    .meta{color:#666;font-size:13px;margin-bottom:20px}
+    .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+    .img-grid img{width:100%;height:150px;object-fit:cover;border-radius:6px}
+    .img-cap{font-size:11px;color:#666;text-align:center;margin-top:3px}
+    .report-card{background:#f9f9f9;border-left:3px solid #f0a500;padding:12px;margin-bottom:10px;border-radius:4px}
+    .footer{margin-top:40px;border-top:1px solid #ddd;padding-top:10px;font-size:11px;color:#999}
+    @media print{body{padding:10px}}
+  </style></head><body>
+  <h1>🏗 ${currentSite.name}</h1>
+  <div class="meta">
+    ${currentSite.address ? `📍 ${currentSite.address}<br>` : ''}
+    ${currentSite.type ? `Kohdetyyppi: ${currentSite.type}<br>` : ''}
+    Raportti luotu: ${pdfDate}<br>
+    Vyöhykkeitä: ${currentZones.length} | Tiedostoja: ${allMedia.length}
+  </div>`;
+
+  // Media by zone
+  html += `<h2>📸 Media vyöhykkeittäin</h2>`;
+  for (const [zoneName, items] of Object.entries(mediaByZone)) {
+    html += `<h3>${zoneName} (${items.length} tiedostoa)</h3><div class="img-grid">`;
+    for (const item of items) {
+      if (item.type === 'image') {
+        html += `<div><img src="${item.url}" alt=""><div class="img-cap">${item.date || ''} ${item.caption || ''}</div></div>`;
+      } else {
+        html += `<div><div style="background:#222;height:150px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#fff">🎥 Video</div><div class="img-cap">${item.date || ''} ${item.caption || ''}</div></div>`;
+      }
+    }
+    html += `</div>`;
+  }
+
+  // Reports
+  if (allReports.length) {
+    html += `<h2>📋 Päivittäiset raportit</h2>`;
+    allReports.forEach(r => {
+      html += `<div class="report-card">
+        <strong>${r.date} ${r.weather || ''}</strong> — ${r.workers || 0} työntekijää<br>
+        <p>${r.work}</p>
+        ${r.notes ? `<p style="color:#666;font-size:13px">${r.notes}</p>` : ''}
+        <small>Kirjannut: ${r.createdByName || '-'}</small>
+      </div>`;
+    });
+  }
+
+  html += `<div class="footer">RakennusDoc — ${pdfDate} — ${currentUser.email}</div>
+  <script>window.onload=()=>{window.print()}<\/script>
+  </body></html>`;
+
+  win.document.write(html);
+  win.document.close();
+};
+
+// ==================== HELPERS ====================
+window.openModal = (id) => document.getElementById(id).classList.add('active');
+window.closeModal = (id) => document.getElementById(id).classList.remove('active');
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+window.toast = toast;
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>
