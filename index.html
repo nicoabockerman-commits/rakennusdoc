@@ -149,7 +149,7 @@ select option{background:var(--bg3)}
 .loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text3)}
 .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:10px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
+.login-page{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg);z-index:9999;overflow-y:auto}
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px}
 .login-logo{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--accent);text-align:center;margin-bottom:4px}
 .login-sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:24px}
@@ -193,7 +193,7 @@ select option{background:var(--bg3)}
 .confirm-text{font-size:13px;color:var(--text2);margin-bottom:20px}
 .confirm-btns{display:flex;gap:10px}
 /* PÄÄSYKOODI */
-#accessScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,165,0,0.12) 0%,transparent 60%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;padding:2rem}
+#accessScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,165,0,0.12) 0%,transparent 60%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;padding:2rem;overflow-y:auto}
 .ac-logo{font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:700;color:var(--accent);text-align:center}
 .ac-sub{color:var(--text2);font-size:0.9rem;margin:0.25rem 0 2.5rem;letter-spacing:1px;text-align:center}
 .ac-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;width:100%;max-width:320px;text-align:center}
