@@ -20,6 +20,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body.locked{overflow:hidden!important;height:100vh!important;position:fixed!important;width:100%!important}
+#mainApp{display:none}
+#mainApp.visible{display:block}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -326,7 +328,7 @@ window.switchLoginTab=function(tab,el){
 </div>
 
 <!-- MAIN APP -->
-<div id="mainApp" class="hidden">
+<div id="mainApp" class="hidden" style="display:none!important">
 <div class="topbar">
   <div class="topbar-logo">🏗 Rakennus<span>Doc</span></div>
   <div class="topbar-right">
