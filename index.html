@@ -19,6 +19,7 @@
   --orange:#e67e22;--purple:#9b59b6;--radius:10px;--shadow:0 4px 24px rgba(0,0,0,0.4);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body.locked{overflow:hidden!important;height:100vh!important;position:fixed!important;width:100%!important}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -235,6 +236,8 @@ select option{background:var(--bg3)}
 <body>
 
 <script>
+// Lock scroll on load
+document.body.classList.add('locked');
 // Global stubs so inline onclick handlers don't crash before module loads
 window.checkAccess=function(enter){
   const val=document.getElementById('acInput').value;
@@ -244,6 +247,7 @@ window.checkAccess=function(enter){
     document.getElementById('accessScreen').style.display='none';
     document.getElementById('loginPage').classList.remove('hidden');
     err.textContent='';
+    // still locked until logged in
   } else if(enter||val.length>=KOODI.length){
     err.textContent='Väärä koodi — yritä uudelleen';
     document.getElementById('acInput').value='';
