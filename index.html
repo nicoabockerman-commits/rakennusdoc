@@ -238,9 +238,12 @@ select option{background:var(--bg3)}
 <body>
 
 <script>
-// Lock scroll on load
-document.body.classList.add('locked');
-// Global stubs so inline onclick handlers don't crash before module loads
+// Lukitse scroll kunnes kirjauduttu sisään
+document.body.style.overflow='hidden';
+document.body.style.position='fixed';
+document.body.style.width='100%';
+
+// Pääsykoodi — toimii heti
 window.checkAccess=function(enter){
   const val=document.getElementById('acInput').value;
   const err=document.getElementById('acErr');
@@ -249,37 +252,20 @@ window.checkAccess=function(enter){
     document.getElementById('accessScreen').style.display='none';
     document.getElementById('loginPage').classList.remove('hidden');
     err.textContent='';
-    // still locked until logged in
   } else if(enter||val.length>=KOODI.length){
     err.textContent='Väärä koodi — yritä uudelleen';
     document.getElementById('acInput').value='';
   }
 };
+
+// Tab vaihto — toimii heti
 window.switchLoginTab=function(tab,el){
   document.querySelectorAll('.login-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  ['loginForm','registerForm','resetForm'].forEach(id=>{
-    const f=document.getElementById(id);
-    if(f) f.classList.toggle('hidden', id!==tab+'Form' && !(tab==='reset'&&id==='resetForm'));
-  });
   document.getElementById('loginForm').classList.toggle('hidden',tab!=='login');
   document.getElementById('registerForm').classList.toggle('hidden',tab!=='register');
   document.getElementById('resetForm').classList.toggle('hidden',tab!=='reset');
 };
-['doLogin','doRegister','doReset','doLogout','saveTyomaa','openSite','goBack',
- 'showPage','openFab','saveZone','openZone','openProgModal','saveProgress',
- 'toggleTag','uploadMedia','openCamera','closeCamera','switchCamera','takePhoto',
- 'openLightbox','closeLightbox','addComment','confirmDelete','closeConfirm',
- 'loadReport','saveReport','loadTunnit','saveTunnit','loadCost','saveKustannus',
- 'loadMeasurements','saveMittaus','updateMeasFields','calcMeas',
- 'saveContact','toggleContacts','exportPDF','exportBackup',
- 'doGlobalSearch','doSiteSearch','getGPS','applyFilter','applySort',
- 'saveTarkastus','saveLisatyo','openAIModal','runAI','applyAITags',
- 'clearAIImage','previewAIImage','openFP','saveFPPlan','saveFPPin',
- 'setFpTool','saveFPData','deleteFPPlan','deleteFPPin','openFPPinModal',
- 'genViewerLink','copyViewerLink','flyToSite','quickOpenMedia',
- 'analyzeCurrentMedia','deleteMedia'
-].forEach(fn=>{ if(!window[fn]) window[fn]=function(){console.log(fn+' not yet loaded');} });
 </script>
 <!-- OFFLINE BANNER -->
 <div id="offlineBanner">📡 Offline-tila — muutokset synkronoidaan kun netti palaa</div>
