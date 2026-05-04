@@ -743,6 +743,7 @@ window.switchLoginTab=function(tab,el){
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,signInAnonymously}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,collection,addDoc,getDocs,doc,deleteDoc,onSnapshot,query,orderBy,where,updateDoc,arrayUnion,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 
@@ -752,6 +753,7 @@ const PAASYKOODI="1234"; // ← VAIHDA OMA KOODISI TÄHÄN
 
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
+const auth=getAuth(app);
 
 
 // STATE
@@ -792,48 +794,9 @@ window.checkAccess=(enter=false)=>{
   else if(enter||val.length>=PAASYKOODI.length){err.textContent="Väärä koodi — yritä uudelleen";document.getElementById("acInput").value="";}
 };
 
-// AUTH
-window.switchLoginTab=(tab,el)=>{
-  document.querySelectorAll(".login-tab").forEach(t=>t.classList.remove("active"));el.classList.add("active");
-  document.getElementById("loginForm").classList.toggle("hidden",tab!=="login");
-  document.getElementById("registerForm").classList.toggle("hidden",tab!=="register");
-  document.getElementById("resetForm").classList.toggle("hidden",tab!=="reset");
-};
-window._doLogin=async()=>{
-  const email=document.getElementById("loginEmail").value.trim(),pass=document.getElementById("loginPassword").value;
-  const remember=document.getElementById("rememberMe").checked;
-  if(!email||!pass)return toast("Täytä kaikki kentät","error");
-  try{await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);await signInWithEmailAndPassword(auth,email,pass);}
-  catch(e){toast("Kirjautuminen epäonnistui. Tarkista sähköposti ja salasana.","error");}
-};
-window.doRegister=async()=>{
-  const name=document.getElementById("regName").value.trim(),email=document.getElementById("regEmail").value.trim(),pass=document.getElementById("regPassword").value;
-  if(!name||!email||!pass)return toast("Täytä kaikki kentät","error");
-  if(pass.length<6)return toast("Salasanan pitää olla vähintään 6 merkkiä","error");
-  try{await setPersistence(auth,browserLocalPersistence);const cred=await createUserWithEmailAndPassword(auth,email,pass);await updateProfile(cred.user,{displayName:name});toast("Tili luotu! Tervetuloa, "+name,"success");}
-  catch(e){toast("Rekisteröinti epäonnistui: "+e.message,"error");}
-};
-window.doReset=async()=>{
-  const email=document.getElementById("resetEmail").value.trim();
-  if(!email)return toast("Anna sähköpostiosoite","error");
-  try{await sendPasswordResetEmail(auth,email);toast("Palautuslinkki lähetetty!","success");}
-  catch(e){toast("Virhe: "+e.message,"error");}
-};
-window.doLogout=async()=>await signOut(auth);
-
-onAuthStateChanged(auth,user=>{
-  currentUser=user;
-  if(user){
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("mainApp").classList.remove("hidden");
-    document.getElementById("userNameDisplay").textContent=user.displayName||user.email.split("@")[0];
-    initApp();setSyncStatus(navigator.onLine?"🟢 Online":"📡 Offline");
-    if(!navigator.onLine)document.getElementById("offlineBanner").style.display="block";
-  }else{
-    document.getElementById("loginPage").classList.remove("hidden");
-    document.getElementById("mainApp").classList.add("hidden");
-  }
-});
+// Auth poistettu - käytetään pääsykoodia
+// Ei kirjautumista
+window.doLogout=()=>{ window.location.reload(); };
 
 window.initApp=function initApp(){
   loadTyomaat();initSigCanvas();
@@ -1757,17 +1720,11 @@ window.copyViewerLink=()=>{
   const params=new URLSearchParams(window.location.search);
   if(params.get('viewer')==='1'&&params.get('site')){
     const siteId=params.get('site');
-    // Wait for auth then show viewer
-    const unsub=onAuthStateChanged(auth,async user=>{
-      if(user)return; // logged in user, skip viewer
-      unsub();
-      await showViewerMode(siteId);
-    });
+    await showViewerMode(siteId);
   }
 })();
 
 async function showViewerMode(siteId){
-  document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('accessScreen').style.display='none';
   document.body.innerHTML=`<div style="background:var(--bg);min-height:100vh;padding:16px;max-width:700px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">
@@ -1803,10 +1760,7 @@ async function showViewerMode(siteId){
   }catch(e){document.getElementById('viewerContent').innerHTML=`<div class="empty"><h3>Virhe ladattaessa</h3><p>${e.message}</p></div>`;}
 }
 
-// Module ready
-window._module_ready=true;
-window._doRegister=window.doRegister;
-window._doReset=window.doReset;
+
 
 // HELPERS
 window.openModal=id=>document.getElementById(id).classList.add("active");
