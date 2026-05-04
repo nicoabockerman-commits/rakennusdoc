@@ -266,6 +266,18 @@ window.switchLoginTab=function(tab,el){
   document.getElementById('registerForm').classList.toggle('hidden',tab!=='register');
   document.getElementById('resetForm').classList.toggle('hidden',tab!=='reset');
 };
+
+// Kirjautumisnappien stub — odottaa moduulin latautumista
+function _waitAndCall(fn, args){
+  if(window['_module_ready']){
+    window[fn].apply(null, args);
+  } else {
+    setTimeout(function(){ _waitAndCall(fn, args); }, 100);
+  }
+}
+window.doLogin=function(){ _waitAndCall('_doLogin',[]); };
+window.doRegister=function(){ _waitAndCall('_doRegister',[]); };
+window.doReset=function(){ _waitAndCall('_doReset',[]); };
 </script>
 <!-- OFFLINE BANNER -->
 <div id="offlineBanner">📡 Offline-tila — muutokset synkronoidaan kun netti palaa</div>
@@ -817,7 +829,7 @@ window.switchLoginTab=(tab,el)=>{
   document.getElementById("registerForm").classList.toggle("hidden",tab!=="register");
   document.getElementById("resetForm").classList.toggle("hidden",tab!=="reset");
 };
-window.doLogin=async()=>{
+window._doLogin=async()=>{
   const email=document.getElementById("loginEmail").value.trim(),pass=document.getElementById("loginPassword").value;
   const remember=document.getElementById("rememberMe").checked;
   if(!email||!pass)return toast("Täytä kaikki kentät","error");
@@ -1820,6 +1832,11 @@ async function showViewerMode(siteId){
       <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)">RakennusDoc — Tilaajan näkymä — Vain luku</div>`;
   }catch(e){document.getElementById('viewerContent').innerHTML=`<div class="empty"><h3>Virhe ladattaessa</h3><p>${e.message}</p></div>`;}
 }
+
+// Module ready
+window._module_ready=true;
+window._doRegister=window.doRegister;
+window._doReset=window.doReset;
 
 // HELPERS
 window.openModal=id=>document.getElementById(id).classList.add("active");
