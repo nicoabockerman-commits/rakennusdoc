@@ -20,8 +20,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body.locked{overflow:hidden!important;height:100vh!important;position:fixed!important;width:100%!important}
-#mainApp{display:none}
-#mainApp.visible{display:block}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 h1,h2,h3,h4{font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -250,7 +248,11 @@ window.checkAccess=function(enter){
   const KOODI='1234';
   if(val===KOODI){
     document.getElementById('accessScreen').style.display='none';
-    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    document.getElementById('mainApp').style.display='block';
+    document.body.style.overflow='';
+    document.body.style.position='';
+    document.body.style.width='';
     err.textContent='';
   } else if(enter||val.length>=KOODI.length){
     err.textContent='Väärä koodi — yritä uudelleen';
@@ -267,17 +269,8 @@ window.switchLoginTab=function(tab,el){
   document.getElementById('resetForm').classList.toggle('hidden',tab!=='reset');
 };
 
-// Kirjautumisnappien stub — odottaa moduulin latautumista
-function _waitAndCall(fn, args){
-  if(window['_module_ready']){
-    window[fn].apply(null, args);
-  } else {
-    setTimeout(function(){ _waitAndCall(fn, args); }, 100);
-  }
-}
-window.doLogin=function(){ _waitAndCall('_doLogin',[]); };
-window.doRegister=function(){ _waitAndCall('_doRegister',[]); };
-window.doReset=function(){ _waitAndCall('_doReset',[]); };
+
+
 </script>
 <!-- OFFLINE BANNER -->
 <div id="offlineBanner">📡 Offline-tila — muutokset synkronoidaan kun netti palaa</div>
@@ -295,38 +288,8 @@ window.doReset=function(){ _waitAndCall('_doReset',[]); };
   </div>
 </div>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="login-page hidden">
-  <div class="login-box">
-    <div class="login-logo">🏗 RakennusDoc</div>
-    <div class="login-sub">Rakennustyömaan dokumentointijärjestelmä</div>
-    <div class="login-tabs">
-      <button class="login-tab active" onclick="switchLoginTab('login',this)">Kirjaudu</button>
-      <button class="login-tab" onclick="switchLoginTab('register',this)">Luo tili</button>
-      <button class="login-tab" onclick="switchLoginTab('reset',this)">Unohtuiko?</button>
-    </div>
-    <div id="loginForm">
-      <div class="form-group"><label>Sähköposti</label><input type="email" id="loginEmail" placeholder="nimi@yritys.fi" autocomplete="email"></div>
-      <div class="form-group"><label>Salasana</label><input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"></div>
-      <div class="remember-row"><input type="checkbox" id="rememberMe" checked><label for="rememberMe">Muista minut</label></div>
-      <button class="btn btn-primary w-full" onclick="doLogin()" style="justify-content:center;margin-top:4px">Kirjaudu sisään</button>
-    </div>
-    <div id="registerForm" class="hidden">
-      <div class="form-group"><label>Nimi</label><input type="text" id="regName" placeholder="Etunimi Sukunimi" autocomplete="name"></div>
-      <div class="form-group"><label>Sähköposti</label><input type="email" id="regEmail" placeholder="nimi@yritys.fi" autocomplete="email"></div>
-      <div class="form-group"><label>Salasana</label><input type="password" id="regPassword" placeholder="vähintään 6 merkkiä" autocomplete="new-password"></div>
-      <button class="btn btn-primary w-full" onclick="doRegister()" style="justify-content:center">Luo tili</button>
-    </div>
-    <div id="resetForm" class="hidden">
-      <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Syötä sähköpostiosoitteesi niin lähetämme palautusohjeet.</p>
-      <div class="form-group"><label>Sähköposti</label><input type="email" id="resetEmail" placeholder="nimi@yritys.fi"></div>
-      <button class="btn btn-primary w-full" onclick="doReset()" style="justify-content:center">Lähetä palautuslinkki</button>
-    </div>
-  </div>
-</div>
-
 <!-- MAIN APP -->
-<div id="mainApp" class="hidden" style="display:none!important">
+<div id="mainApp" class="hidden">
 <div class="topbar">
   <div class="topbar-logo">🏗 Rakennus<span>Doc</span></div>
   <div class="topbar-right">
@@ -335,9 +298,7 @@ window.doReset=function(){ _waitAndCall('_doReset',[]); };
     <button class="btn-icon" onclick="toggleContacts()" id="contactsBtn" style="display:none">
       <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     </button>
-    <button class="btn-icon" onclick="doLogout()">
-      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-    </button>
+
   </div>
 </div>
 
@@ -783,7 +744,7 @@ window.doReset=function(){ _waitAndCall('_doReset',[]); };
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getFirestore,collection,addDoc,getDocs,doc,deleteDoc,onSnapshot,query,orderBy,where,updateDoc,arrayUnion,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile,sendPasswordResetEmail,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 
 const firebaseConfig={apiKey:"AIzaSyChXZJKbreDwkPhXUFwgiYwh5EcQb5kDTU",authDomain:"rakennusdoc.firebaseapp.com",projectId:"rakennusdoc",storageBucket:"rakennusdoc.firebasestorage.app",messagingSenderId:"537521199862",appId:"1:537521199862:web:5541c58326f32da2282ad7"};
 const CLOUD_NAME="dicmfqyhr",UPLOAD_PRESET="rakennusdoc";
@@ -791,7 +752,7 @@ const PAASYKOODI="1234"; // ← VAIHDA OMA KOODISI TÄHÄN
 
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
-const auth=getAuth(app);
+
 
 // STATE
 let currentUser=null,currentSite=null;
@@ -818,7 +779,16 @@ try{const s=localStorage.getItem("rdoc_offline");if(s)offlineQueue=JSON.parse(s)
 window.checkAccess=(enter=false)=>{
   const val=document.getElementById("acInput").value;
   const err=document.getElementById("acErr");
-  if(val===PAASYKOODI){document.getElementById("accessScreen").style.display="none";document.getElementById("loginPage").classList.remove("hidden");err.textContent="";}
+  if(val===PAASYKOODI){
+    document.getElementById("accessScreen").style.display="none";
+    document.getElementById("mainApp").classList.remove("hidden");
+    document.getElementById("mainApp").style.display="block";
+    document.body.style.overflow="";
+    document.body.style.position="";
+    document.body.style.width="";
+    err.textContent="";
+    setTimeout(function(){ if(window.initApp) window.initApp(); }, 300);
+  }
   else if(enter||val.length>=PAASYKOODI.length){err.textContent="Väärä koodi — yritä uudelleen";document.getElementById("acInput").value="";}
 };
 
@@ -865,7 +835,7 @@ onAuthStateChanged(auth,user=>{
   }
 });
 
-function initApp(){
+window.initApp=function initApp(){
   loadTyomaat();initSigCanvas();
   const today=new Date().toISOString().split("T")[0];
   ["mediaDate","reportDate","tunPvm","tarPvm","lisatyoPvm","costDate"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
