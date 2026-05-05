@@ -755,7 +755,6 @@ const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const auth=getAuth(app);
 
-
 // STATE
 let currentUser=null,currentSite=null;
 let currentSites=[],currentZones=[],currentMediaItems=[];
@@ -799,9 +798,25 @@ window.checkAccess=(enter=false)=>{
 window.doLogout=()=>{ window.location.reload(); };
 
 window.initApp=function initApp(){
-  loadTyomaat();initSigCanvas();
-  const today=new Date().toISOString().split("T")[0];
-  ["mediaDate","reportDate","tunPvm","tarPvm","lisatyoPvm","costDate"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
+  // Kirjaudu anonyymisti ensin, sitten lataa data
+  signInAnonymously(auth).then(cred=>{
+    currentUser={uid:cred.user.uid,displayName:"Käyttäjä",email:"anon@rakennusdoc.fi"};
+    document.getElementById("userNameDisplay").textContent="Käyttäjä";
+    setSyncStatus(navigator.onLine?"🟢 Online":"📡 Offline");
+    if(!navigator.onLine)document.getElementById("offlineBanner").style.display="block";
+    loadTyomaat();
+    initSigCanvas();
+    const today=new Date().toISOString().split("T")[0];
+    ["mediaDate","reportDate","tunPvm","tarPvm","lisatyoPvm","costDate"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
+  }).catch(e=>{
+    // Anonymous auth ei toimi - yritetään silti
+    currentUser={uid:"local-"+Date.now(),displayName:"Käyttäjä",email:"anon@rakennusdoc.fi"};
+    loadTyomaat();
+    initSigCanvas();
+    const today=new Date().toISOString().split("T")[0];
+    ["mediaDate","reportDate","tunPvm","tarPvm","lisatyoPvm","costDate"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
+    toast("Huom: Anonyymi kirjautuminen epäonnistui","error");
+  });
 }
 
 // NAV
