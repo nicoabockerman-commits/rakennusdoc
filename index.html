@@ -193,8 +193,8 @@ select option{background:var(--bg3)}
 .confirm-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
 .confirm-text{font-size:13px;color:var(--text2);margin-bottom:20px}
 .confirm-btns{display:flex;gap:10px}
-
-#accessScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,165,0,0.12) 0%,transparent 60%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;padding:2rem;overflow-y:auto}
+/* KIRJAUTUMINEN */
+#loginScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,165,0,0.12) 0%,transparent 60%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;padding:2rem;overflow-y:auto}
 .ac-logo{font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:700;color:var(--accent);text-align:center}
 .ac-sub{color:var(--text2);font-size:0.9rem;margin:0.25rem 0 2.5rem;letter-spacing:1px;text-align:center}
 .ac-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;width:100%;max-width:320px;text-align:center}
@@ -252,7 +252,7 @@ document.body.style.width='100%';
 <div id="offlineBanner">📡 Offline-tila — muutokset synkronoidaan kun netti palaa</div>
 
 <!-- KIRJAUTUMINEN -->
-
+<div id="loginScreen">
   <div class="ac-logo">🏗 RakennusDoc</div>
   <div class="ac-sub">Työmaiden johtokeskus</div>
   <div class="ac-box">
@@ -266,7 +266,7 @@ document.body.style.width='100%';
 </div>
 
 <!-- MAIN APP -->
-<div id="mainApp">
+<div id="mainApp" class="hidden">
 <div class="topbar">
   <div class="topbar-logo">🏗 Rakennus<span>Doc</span></div>
   <div class="topbar-right">
@@ -740,7 +740,7 @@ try{const s=localStorage.getItem("rdoc_offline");if(s)offlineQueue=JSON.parse(s)
 
 // FIREBASE AUTH - oikea kirjautuminen
 function unlockApp(){
-  document.getElementById("accessScreen").style.display="none";
+  document.getElementById("loginScreen").style.display="none";
   document.getElementById("mainApp").classList.remove("hidden");
   document.getElementById("mainApp").style.display="block";
   document.body.style.overflow="";
@@ -748,7 +748,7 @@ function unlockApp(){
   document.body.style.width="";
 }
 function lockApp(){
-  document.getElementById("accessScreen").style.display="flex";
+  document.getElementById("loginScreen").style.display="flex";
   document.getElementById("mainApp").classList.add("hidden");
   document.body.style.overflow="hidden";
   document.body.style.position="fixed";
@@ -2255,7 +2255,7 @@ window.copyViewerLink=()=>{
 })();
 
 async function showViewerMode(siteId){
-  document.getElementById('accessScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='none';
   document.body.innerHTML=`<div style="background:var(--bg);min-height:100vh;padding:16px;max-width:700px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">
       <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--accent)">🏗 RakennusDoc</div>
@@ -2314,7 +2314,7 @@ window.addEventListener('click', e=>{
   if(action==='rename')renameGlobalWorker(id);
 });
 
-if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+if("serviceWorker"in navigator){navigator.serviceWorker.register("./sw.js?v=auth-v7").catch(()=>{});}
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
