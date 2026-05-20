@@ -1,18 +1,19 @@
 {
   "name": "RakennusDoc",
-  "short_name": "RakennusDoc",
-  "start_url": "/",
+  "short_name": "RakDoc",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d0f14",
-  "theme_color": "#f0a500",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192x192/f0a500/000000?text=RD",
+      "src": "https://cdn-icons-png.flaticon.com/512/2942/2942166.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://via.placeholder.com/512x512/f0a500/000000?text=RD",
+      "src": "https://cdn-icons-png.flaticon.com/512/2942/2942166.png",
       "sizes": "512x512",
       "type": "image/png"
     }
