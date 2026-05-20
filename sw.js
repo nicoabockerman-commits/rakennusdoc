@@ -1,4 +1,4 @@
-const CACHE_NAME = "rakennusdoc-no-cache-v1";
+const CACHE_NAME = "rakennusdoc-v8-clean";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
@@ -7,12 +7,16 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(key => caches.delete(key)))
+      Promise.all(
+        keys.map(key => caches.delete(key))
+      )
     )
   );
   self.clients.claim();
 });
 
 self.addEventListener("fetch", event => {
-  event.respondWith(fetch(event.request));
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
