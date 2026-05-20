@@ -1,4 +1,4 @@
-const CACHE_NAME = "rakennusdoc-v1";
+const CACHE = "rakennusdoc-v3-auth";
 
 const urlsToCache = [
   "./",
