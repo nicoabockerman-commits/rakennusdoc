@@ -704,7 +704,7 @@ document.body.style.width='100%';
 
 <script type="module">
 
-const todayStr = new Date().toISOString().split("T")[0];
+const new Date().toISOString().split("T")[0];
   
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -993,7 +993,6 @@ function siteLastModified(site){
   return formatTimestamp(site.updatedAt||site.modifiedAt||site.createdAt);
 }
 function renderCeoDashboard(){
-  const today=todayStr();
   const activeSites=currentSites.filter(s=>(s.status||'active')!=='done').length;
   const assignedToday=allAssignmentsCache.filter(a=>a.date===today).length;
   const lateSites=currentSites.filter(s=>{const d=daysUntil(s.deadline);return d!==null&&d<0&&(s.status||'active')!=='done';}).length;
