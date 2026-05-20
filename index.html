@@ -844,13 +844,62 @@ window.openFab=()=>{
 
 // TYÖMAAT
 function loadTyomaat(){
-  const q=query(collection(db,"sites"),orderBy("createdAt","desc"));
-  onSnapshot(q,snap=>{
-    currentSites=[];snap.forEach(d=>currentSites.push({id:d.id,...d.data()}));
-    renderTyomaaList();updateAllSelects();loadAllMediaGlobal();migrateLegacyWorkersToBank();
-  },err=>{
-    document.getElementById("tyomaaList").innerHTML=`<div class="card" style="border-color:var(--red);color:var(--red)">Tietojen lataus epäonnistui: ${escapeHtml(err.message)}</div>`;
-  });
+  const list=document.getElementById("tyomaaList");
+  if(list){
+    list.innerHTML=`<div class="loader"><div class="spinner"></div>Ladataan työmaita...</div>`;
+  }
+
+  let loaded=false;
+  const timeout=setTimeout(()=>{
+    if(!loaded && list){
+      list.innerHTML=`<div class="card" style="border-color:var(--orange);color:var(--orange)">
+        Työmaiden lataus kestää liian kauan.<br><br>
+        Tarkista Firebase Console: <br>
+        1) Authentication → Email/Password on päällä<br>
+        2) Firestore Database on luotu<br>
+        3) Firestore Rules sallii kirjautuneet käyttäjät<br><br>
+        Jos kaikki on oikein, päivitä sivu kerran.
+      </div>`;
+    }
+  },8000);
+
+  try{
+    // Ei orderBy täällä: vältetään kaikki Firestore index -ongelmat.
+    const q=collection(db,"sites");
+    onSnapshot(q,snap=>{
+      loaded=true;
+      clearTimeout(timeout);
+      currentSites=[];
+      snap.forEach(d=>currentSites.push({id:d.id,...d.data()}));
+      currentSites.sort((a,b)=>{
+        const at=a.createdAt?.seconds||0;
+        const bt=b.createdAt?.seconds||0;
+        return bt-at;
+      });
+      renderTyomaaList();
+      updateAllSelects();
+      loadAllMediaGlobal();
+      migrateLegacyWorkersToBank();
+    },err=>{
+      loaded=true;
+      clearTimeout(timeout);
+      if(list){
+        list.innerHTML=`<div class="card" style="border-color:var(--red);color:var(--red)">
+          Tietojen lataus epäonnistui:<br><br>${escapeHtml(err.message)}<br><br>
+          Todennäköinen syy: Firestore Rules tai Authentication-asetus.
+        </div>`;
+      }
+      toast("Firebase virhe: "+err.message,"error");
+    });
+  }catch(e){
+    loaded=true;
+    clearTimeout(timeout);
+    if(list){
+      list.innerHTML=`<div class="card" style="border-color:var(--red);color:var(--red)">
+        Sovellusvirhe:<br><br>${escapeHtml(e.message)}
+      </div>`;
+    }
+  }
 }
 function escapeHtml(value){
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
