@@ -1287,47 +1287,82 @@ window.saveTodayWorkersFromModal=async(siteId,btn)=>{
 };
 function renderTyomaaList(){
   const list=document.getElementById("tyomaaList");
+  const today=todayISO();
+  const scheduleHeader=`
+    <div class="card" style="border-left:4px solid var(--accent);margin-bottom:12px">
+      <div class="flex-between" style="gap:10px;align-items:flex-start">
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;color:var(--accent)">📅 Työmaiden aikataulu</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:3px">Etusivulla näkyy työmaan nimi, tämän päivän työntekijät ja luovutuspäivä. Reunan väri muuttuu automaattisesti luovutuspäivän mukaan.</div>
+        </div>
+        <span class="badge badge-accent">Tänään ${formatFiDate(today)}</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:12px">
+        <span class="badge" style="background:rgba(46,204,113,0.12);color:var(--green);border:1px solid rgba(46,204,113,0.35)">🟢 yli 7 päivää jäljellä</span>
+        <span class="badge" style="background:rgba(230,126,34,0.12);color:var(--orange);border:1px solid rgba(230,126,34,0.35)">🟠 alle 7 päivää</span>
+        <span class="badge" style="background:rgba(231,76,60,0.12);color:var(--red);border:1px solid rgba(231,76,60,0.35)">🔴 myöhässä</span>
+      </div>
+    </div>`;
   if(!currentSites.length){
-    list.innerHTML=renderCeoDashboard()+renderWorkerBank()+`<div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/></svg><h3>Ei työmaita vielä</h3><p>Luo ensimmäinen työmaa + painikkeella</p></div>`;
+    list.innerHTML=renderCeoDashboard()+renderWorkerBank()+scheduleHeader+`<div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/></svg><h3>Ei työmaita vielä</h3><p>Luo ensimmäinen työmaa + painikkeella</p></div>`;
     return;
   }
-  list.innerHTML=renderCeoDashboard()+renderWorkerBank()+currentSites.map(s=>{
+  const sortedSites=[...currentSites].sort((a,b)=>{
+    const da=a.deadline?new Date(a.deadline+"T00:00:00").getTime():Infinity;
+    const db=b.deadline?new Date(b.deadline+"T00:00:00").getTime():Infinity;
+    if(da!==db)return da-db;
+    return String(a.name||'').localeCompare(String(b.name||''),'fi');
+  });
+  list.innerHTML=renderCeoDashboard()+renderWorkerBank()+scheduleHeader+sortedSites.map(s=>{
     const status=siteStatusInfo(s);
-    const allWorkers=Array.isArray(s.workers)?s.workers:[];
     const todayWorkers=getTodayWorkersForSite(s.id);
-    const workersToShow=todayWorkers;
     const left=daysUntil(s.deadline);
     const progress=Number(s.progress||0);
+    const deadlineText=s.deadline?formatFiDate(s.deadline):"Ei luovutuspäivää";
+    const deadlineInfo=left===null?"Lisää luovutuspäivä työmaalle":(left<0?`Myöhässä ${Math.abs(left)} päivää`:left===0?"Luovutus tänään":`${left} päivää jäljellä`);
     return `
-    <div class="site-card" onclick="openSite('${s.id}')" style="border-left:4px solid ${status.color}">
-      <div class="flex-between">
-        <div class="site-card-name">${escapeHtml(s.name)}</div>
-        <span class="badge" style="background:${status.color}22;color:${status.color};border:1px solid ${status.color}55">${status.label}</span>
-      </div>
-      <div class="site-card-meta">
-        ${s.address?`<span>📍 ${escapeHtml(s.address)}</span>`:""}
-        ${s.deadline?`<span>📅 Luovutus: ${formatFiDate(s.deadline)}</span>`:""}
-        ${siteLastModified(s)?`<span>🕒 Muokattu: ${siteLastModified(s)}</span>`:""}
-        ${left!==null?`<span>${left<0?"⚠️ Myöhässä "+Math.abs(left)+" pv":"⏳ "+left+" pv jäljellä"}</span>`:""}
-      </div>
-      <div class="prog-bar-wrap" style="margin-top:10px">
-        <div class="prog-bar-label"><span>Valmius</span><span>${progress}%</span></div>
-        <div class="prog-bar-track"><div class="${progress<34?"prog-fill-low":progress<67?"prog-fill-mid":"prog-fill-high"} prog-bar-fill" style="width:${Math.max(0,Math.min(100,progress))}%"></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px">
-        <button class="btn btn-secondary btn-sm" style="justify-content:center" onclick="event.stopPropagation();openWorkerAssignModal('${s.id}')">👷 Merkitse päivän työntekijät</button>
-        <button class="btn btn-danger btn-sm" title="Poista työmaa" onclick="event.stopPropagation();deleteSiteDeep('${s.id}')">🗑️</button>
-      </div>
-      ${workersToShow.length?`
-        <div style="margin-top:10px;padding:10px;background:var(--bg3);border-radius:8px;border:1px solid var(--border)">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">
-            👷 ${todayWorkers.length?"TÄNÄÄN TYÖMAALLA":"TYÖNTEKIJÄT"}
+    <div class="site-card" onclick="openSite('${s.id}')" style="border-left:6px solid ${status.color};padding:0;overflow:hidden">
+      <div style="padding:14px 14px 12px;background:linear-gradient(90deg,${status.color}18,transparent 55%)">
+        <div class="flex-between" style="gap:10px;align-items:flex-start">
+          <div style="min-width:0">
+            <div class="site-card-name" style="font-size:21px;margin-bottom:2px">${escapeHtml(s.name)}</div>
+            <div class="site-card-meta">
+              ${s.address?`<span>📍 ${escapeHtml(s.address)}</span>`:""}
+              ${siteLastModified(s)?`<span>🕒 Muokattu: ${siteLastModified(s)}</span>`:""}
+            </div>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            ${workersToShow.map(w=>{const worker=getWorkerByName(w);return `<span style="background:${worker.color||'#f0a500'}22;border:1px solid ${worker.color||'#f0a500'}55;color:${worker.color||'var(--accent)'};padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600">${escapeHtml(w)}</span>`}).join("")}
+          <span class="badge" style="background:${status.color}22;color:${status.color};border:1px solid ${status.color}55;white-space:nowrap">${status.label}</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:11px;color:var(--text2);font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;margin-bottom:6px">👷 TÄNÄÄN TÖISSÄ</div>
+            ${todayWorkers.length?`
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                ${todayWorkers.map(w=>{const worker=getWorkerByName(w);return `<span style="background:${worker.color||'#f0a500'}22;border:1px solid ${worker.color||'#f0a500'}55;color:${worker.color||'var(--accent)'};padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700">${escapeHtml(w)}</span>`}).join("")}
+              </div>`:`<div style="font-size:13px;color:var(--text3)">Ei työntekijöitä merkitty tälle päivälle.</div>`}
           </div>
-        </div>`:""}
-      ${s.notes?`<p style="font-size:12px;color:var(--text2);margin-top:8px">${escapeHtml(s.notes)}</p>`:""}
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px">
+              <div style="font-size:11px;color:var(--text2);font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;margin-bottom:5px">📅 LUOVUTUSPÄIVÄ</div>
+              <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:${status.color}">${deadlineText}</div>
+              <div style="font-size:12px;color:var(--text2);margin-top:2px">${deadlineInfo}</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px">
+              <div class="prog-bar-label"><span>Valmius</span><span>${progress}%</span></div>
+              <div class="prog-bar-track" style="height:7px"><div class="${progress<34?"prog-fill-low":progress<67?"prog-fill-mid":"prog-fill-high"} prog-bar-fill" style="width:${Math.max(0,Math.min(100,progress))}%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px">
+          <button class="btn btn-secondary btn-sm" style="justify-content:center" onclick="event.stopPropagation();openWorkerAssignModal('${s.id}')">👷 Merkitse päivän työntekijät</button>
+          <button class="btn btn-danger btn-sm" title="Poista työmaa" onclick="event.stopPropagation();deleteSiteDeep('${s.id}')">🗑️</button>
+        </div>
+
+        ${s.notes?`<p style="font-size:12px;color:var(--text2);margin-top:8px">${escapeHtml(s.notes)}</p>`:""}
+      </div>
     </div>`;
   }).join("");
 }
